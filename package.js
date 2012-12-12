@@ -25,5 +25,7 @@ Package.on_use(function (api, where) {
     api.add_files(["../../../../client/tests/" + file], "client");
   })
 
-  api.add_files(["postTest.js"], "client");
+  //This runs the test
+  //leaving this out for now so tests aren't run on every page
+  //  api.add_files(["postTest.js"], "client");
 ;})
