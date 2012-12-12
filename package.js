@@ -12,6 +12,7 @@ Package.on_use(function (api, where) {
   api.use("coffeescript", ["client"]);
 
   api.add_files(['mocha.js'], "client");
+  api.add_files(["chai.js"], "client");
   api.add_files(['mocha.css'], "client");
   api.add_files(["preTest.js"], "client");
 
