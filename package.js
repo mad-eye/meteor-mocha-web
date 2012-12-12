@@ -9,6 +9,8 @@ Package.on_use(function (api, where) {
   var path = require("path");
   var fs = require("fs");
 
+  api.use("coffeescript", ["client"]);
+
   api.add_files(['mocha.js'], "client");
   api.add_files(['mocha.css'], "client");
   api.add_files(["preTest.js"], "client");
