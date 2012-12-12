@@ -1,9 +1,4 @@
 @charset "UTF-8";
-body {
-  font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding: 60px 50px;
-}
-
 #mocha ul, #mocha li {
   margin: 0;
   padding: 0;
