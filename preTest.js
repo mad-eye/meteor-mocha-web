@@ -1,2 +1,2 @@
-console.log("running preTest");
+//console.log("running preTest");
 mocha.setup("bdd");
