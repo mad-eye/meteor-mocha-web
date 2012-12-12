@@ -187,7 +187,8 @@ body {
 }
 
 #mocha-stats {
-  position: fixed;
+/*  gettind rid of this so i can render it on a page w/ other content
+position: fixed; */
   top: 15px;
   right: 10px;
   font-size: 12px;
