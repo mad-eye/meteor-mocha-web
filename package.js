@@ -16,11 +16,13 @@ Package.on_use(function (api, where) {
   api.add_files(['mocha.css'], "client");
   api.add_files(["preTest.js"], "client");
 
-  clientTestPath = path.join(process.cwd(), "client", "tests");
+  process.chdir(process.env.METEOR_CLIENT_TEST_DIR);
+  clientTestPath = ".";
   files = fs.readdirSync(clientTestPath)
 
   //TODO figure out something less ugly for adding these files
   //create symbolic link to from project client/tests? 
+
   files.forEach(function(file){
     api.add_files(["../../../../client/tests/" + file], "client");
   })
