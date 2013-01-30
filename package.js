@@ -8,26 +8,17 @@ Package.on_use(function (api, where) {
 
   var path = require("path");
   var fs = require("fs");
+  var util = require("util");
 
   api.use("coffeescript", ["client"]);
 
-  api.add_files(['mocha.js'], "client");
-  api.add_files(["chai.js"], "client");
-  api.add_files(['mocha.css'], "client");
-  api.add_files(["preTest.js"], "client");
+  api.add_files(['mocha.js', "chai.js", "mocha.css", "pretest.js"], "client");
+  files = fs.readdirSync(process.env.METEOR_CLIENT_TEST_DIR)
 
-  process.chdir(process.env.METEOR_CLIENT_TEST_DIR);
-  clientTestPath = ".";
-  files = fs.readdirSync(clientTestPath)
-
-  //TODO figure out something less ugly for adding these files
-  //create symbolic link to from project client/tests? 
-
+  var self = this;
   files.forEach(function(file){
-    api.add_files(["../../../../client/tests/" + file], "client");
+    var filePath = path.join(process.env.METEOR_CLIENT_TEST_DIR, file);
+    var relativePath = path.relative(self.source_root, filePath)
+    api.add_files([relativePath], "client");
   })
-
-  //This runs the test
-  //leaving this out for now so tests aren't run on every page
-  //  api.add_files(["postTest.js"], "client");
 ;})
