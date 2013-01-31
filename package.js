@@ -13,7 +13,7 @@ Package.on_use(function (api, where) {
   //for environments like production METEOR_MOCHA_TEST_DIR should be
   //undefined and the test framework will not be included
   if (!process.env.METEOR_MOCHA_TEST_DIR){
-    console.log("METEOR_MOCHA_TEST_DIR undefined, not included meteor-mocha-web files");
+    console.log("METEOR_MOCHA_TEST_DIR undefined, not including meteor-mocha-web files");
     return;
   }
   var path = require("path");
