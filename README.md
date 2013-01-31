@@ -4,6 +4,9 @@ meteor-mocha-web allows you to easily and safely run mocha tests within the Mete
 
 *CODE_SAMPLE*
 
+meteor-mocha-web includes the [chai](http://chaijs.com/) assertion library 
+(but you can use a different assertion library if you choose).
+
 Tests are only included when `METEOR_MOCHA_TEST_DIR` is defined, so they will only exist on environments you specify.
 
 ## Setup
