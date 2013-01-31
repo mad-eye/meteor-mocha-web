@@ -1,21 +1,20 @@
-# meteor-mocha-client
+# meteor-mocha-web
 
-Meteor-mocha-client allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use Meteor collections.
+meteor-mocha-web allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use and examine Meteor collections.
 
 *CODE_SAMPLE*
 
-Tests are only included when `METEOR_CLIENT_TEST` is set to true, so they will only exist on environments you specify.
+Tests are only included when `METEOR_MOCHA_TEST_DIR` is defined, so they will only exist on environments you specify.
 
 ## Setup
 
 1. Install Meteorite if you haven't already `npm install -g meteorite`
 2. Add the smart package to your project. `mrt add PACKAGE_NAME`
-3. Create these environment variables
-  -METEOR_CLIENT_TEST_DIR (set to directory containing your client side tests
-  -METEOR_CLIENT_TEST (set to true)
-4. Restart your meteor server if it's already running.
-5. Add `{{test-report}}` to the template where you'd like to see your test results
+3. Specify where your tests live in `METEOR_MOCHA_TEST_DIR`
+4. Restart meteor if it's already running.
+5. Add `{{mochaTestReport}}` to the template where you'd like to see your test results.
 
 ## Optional Setup
 
 ### Setting up PhantomJS/Mocha 
+TODO
