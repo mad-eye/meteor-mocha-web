@@ -1,0 +1,9 @@
+{
+  "name":"mocha-web",
+  "description":"Easily and securely use mocha within the client side Meteor",
+  "homepage":"https://github.com/mad-eye/meteor-mocha-web"
+  "author":"Madeye  (http://madeye.io)"
+  "version":"0.0.1",
+  "git": "https://github.com/mad-eye/meteor-mocha-web.git",
+  "packages":{}
+}
