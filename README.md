@@ -2,7 +2,7 @@
 
 meteor-mocha-web allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use and examine Meteor collections.
 
-Here's an example using CoffeeScript
+Here's an example using CoffeeScript (or [check out the full Meteor project w/ tests](https://github.com/mad-eye/leaderboard-mocha))
 
 ```
 describe "Leaderboard", ->
