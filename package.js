@@ -20,7 +20,7 @@ Package.on_use(function (api, where) {
   var fs = require("fs");
   var util = require("util");
 
-  api.add_files(['mocha.js', "chai.js", "mocha.css", "pretest.js", "testRunner.js"], "client");
+  api.add_files(['mocha.js', "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
 
   //XXX this should search recursively for test files
   //XXX this should only include js or coffee files
