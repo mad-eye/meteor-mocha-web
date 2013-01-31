@@ -3,17 +3,29 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  if (!process.env.METEOR_CLIENT_TEST || process.env.METEOR_CLIENT_TEST != "true")
-    return;
+  //coffeescript included here in case you want to right your tests in it
+  api.use(["coffeescript", "templating"], ["client"]);
 
+  //always include test report template (it will be just be an empty
+  //div if not tests/framework are added) 
+  api.add_files(["testReport.html"], "client");
+
+  //for environments like production METEOR_MOCHA_TEST_DIR should be
+  //undefined and the test framework will not be included
+  if (!process.env.METEOR_MOCHA_TEST_DIR){
+    console.log("METEOR_MOCHA_TEST_DIR undefined, not included meteor-mocha-web files");
+    return;
+  }
   var path = require("path");
   var fs = require("fs");
   var util = require("util");
 
-  api.use("coffeescript", ["client"]);
+  api.add_files(['mocha.js', "chai.js", "mocha.css", "pretest.js", "testRunner.js"], "client");
 
-  api.add_files(['mocha.js', "chai.js", "mocha.css", "pretest.js"], "client");
-  files = fs.readdirSync(process.env.METEOR_CLIENT_TEST_DIR)
+  //XXX this should search recursively for test files
+  //XXX this should only include js or coffee files
+  //XXX should be changed to colon separated METEOR_MOCHA_TEST_DIRS
+  files = fs.readdirSync(process.env.METEOR_MOCHA_TEST_DIR)
 
   var self = this;
   files.forEach(function(file){
