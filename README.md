@@ -2,6 +2,10 @@
 
 Meteor-mocha-client allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use Meteor collections.
 
+*CODE_SAMPLE*
+
+Tests are only included when `METEOR_CLIENT_TEST` is set to true, so they will only exist on environments you specify.
+
 ## Setup
 
 1. Install Meteorite if you haven't already `npm install -g meteorite`
