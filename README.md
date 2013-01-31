@@ -2,10 +2,21 @@
 
 meteor-mocha-web allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use and examine Meteor collections.
 
-*CODE_SAMPLE*
+Here's an example using CoffeeScript
 
-meteor-mocha-web includes the [chai](http://chaijs.com/) assertion library 
-(but you can use a different assertion library if you choose).
+```
+describe "Leaderboard", ->
+  describe "givePoints", ->
+    it "gives 5 points to the user", ->
+      #create a player
+      playerId = Players.insert {name: "TestUser1", score: 5}
+      Session.set "selected_player", playerId
+      givePoints()
+      player = Players.findOne(playerId)
+      chai.assert.equal 10, player.score
+      Players.remove {name: "TestUser1"}
+```
+You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
 
 Tests are only included when `METEOR_MOCHA_TEST_DIR` is defined, so they will only exist on environments you specify.
 
