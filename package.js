@@ -29,7 +29,7 @@ Package.on_use(function (api, where) {
 
   var self = this;
   files.forEach(function(file){
-    var filePath = path.join(process.env.METEOR_CLIENT_TEST_DIR, file);
+    var filePath = path.join(process.env.METEOR_MOCHA_TEST_DIR, file);
     var relativePath = path.relative(self.source_root, filePath)
     api.add_files([relativePath], "client");
   })
