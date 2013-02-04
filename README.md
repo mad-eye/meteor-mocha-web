@@ -4,7 +4,7 @@ meteor-mocha-web allows you to easily and safely run mocha tests within the Mete
 
 Here's an example using CoffeeScript (or [check out the full Meteor project w/ tests](https://github.com/mad-eye/leaderboard-mocha))
 
-```
+```coffeescript
 describe "Leaderboard", ->
   describe "givePoints", ->
     it "gives 5 points to the user", ->
