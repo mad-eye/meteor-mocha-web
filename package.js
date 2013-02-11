@@ -7,7 +7,7 @@ Package.on_use(function (api, where) {
   api.use(["coffeescript", "templating"], ["client"]);
 
   //always include test report template (it will be just be an empty
-  //div if not tests/framework are added) 
+  //div if not tests/framework are added)
   api.add_files(["testReport.html"], "client");
 
   //for environments like production METEOR_MOCHA_TEST_DIR should be
@@ -31,6 +31,11 @@ Package.on_use(function (api, where) {
   files.forEach(function(file){
     var filePath = path.join(process.env.METEOR_MOCHA_TEST_DIR, file);
     var relativePath = path.relative(self.source_root, filePath)
-    api.add_files([relativePath], "client");
+    stats = fs.statSync(filePath)
+    if (stats.isDirectory()) {
+      //TODO: Recursively enter this and find tests.
+    } else if (stats.isFile()) {
+      api.add_files([relativePath], "client");
+    }
   })
 ;})
