@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  //coffeescript included here in case you want to right your tests in it
+  //coffeescript included here in case you want to write your tests in it
   api.use(["coffeescript", "templating"], ["client"]);
 
   //always include test report template (it will be just be an empty
@@ -20,6 +20,7 @@ Package.on_use(function (api, where) {
   var fs = require("fs");
   var util = require("util");
 
+  api.add_files(["mochastub.js", "chai.js"], ["server"]);
   api.add_files(['mocha.js', "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
 
   //XXX this should search recursively for test files
@@ -35,7 +36,7 @@ Package.on_use(function (api, where) {
     if (stats.isDirectory()) {
       //TODO: Recursively enter this and find tests.
     } else if (stats.isFile()) {
-      api.add_files([relativePath], "client");
+      api.add_files([relativePath], ["client", "server"]);
     }
   })
 ;})
