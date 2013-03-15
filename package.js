@@ -29,14 +29,19 @@ Package.on_use(function (api, where) {
   files = fs.readdirSync(process.env.METEOR_MOCHA_TEST_DIR)
 
   var self = this;
-  files.forEach(function(file){
-    var filePath = path.join(process.env.METEOR_MOCHA_TEST_DIR, file);
-    var relativePath = path.relative(self.source_root, filePath)
-    stats = fs.statSync(filePath)
-    if (stats.isDirectory()) {
-      //TODO: Recursively enter this and find tests.
-    } else if (stats.isFile()) {
-      api.add_files([relativePath], ["client", "server"]);
-    }
-  })
+
+  var addFiles = function(dir){
+    files = fs.readdirSync(dir)
+    files.forEach(function(file){
+      var filePath = path.join(dir, file);
+      var relativePath = path.relative(self.source_root, filePath)
+      stats = fs.statSync(filePath)
+      if (stats.isDirectory()) {
+        addFiles((filePath));
+      } else if (stats.isFile()) {
+        api.add_files([relativePath], ["client", "server"]);
+      }
+    })
+  }
+  addFiles(process.env.METEOR_MOCHA_TEST_DIR);
 ;})
