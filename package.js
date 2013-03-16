@@ -12,8 +12,8 @@ Package.on_use(function (api, where) {
 
   //for environments like production METEOR_MOCHA_TEST_DIR should be
   //undefined and the test framework will not be included
-  if (!process.env.METEOR_MOCHA_TEST_DIR){
-    console.log("METEOR_MOCHA_TEST_DIR undefined, not including meteor-mocha-web files");
+  if (!process.env.METEOR_MOCHA_TEST_DIR && !process.env.METEOR_MOCHA_TEST_DIRS){
+    console.log("METEOR_MOCHA_TEST_DIRS is undefined, not including meteor-mocha-web files");
     return;
   }
   var path = require("path");
@@ -46,6 +46,12 @@ Package.on_use(function (api, where) {
       }
     })
   }
-  addFiles(process.env.METEOR_MOCHA_TEST_DIR);
-
+  if (process.env.METEOR_MOCHA_TEST_DIR){
+    addFiles(process.env.METEOR_MOCHA_TEST_DIR);
+  }
+  if (process.env.METEOR_MOCHA_TEST_DIRS){
+    process.env.METEOR_MOCHA_TEST_DIRS.split(":").forEach(function(testDir){
+      addFiles(testDir);
+    });
+  }
 ;})
