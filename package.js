@@ -23,13 +23,15 @@ Package.on_use(function (api, where) {
   api.add_files(["mochastub.js", "chai.js"], ["server"]);
   api.add_files(['mocha.js', "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
 
-  //XXX this should search recursively for test files
-  //XXX this should only include js or coffee files
-  //XXX should be changed to colon separated METEOR_MOCHA_TEST_DIRS
-  files = fs.readdirSync(process.env.METEOR_MOCHA_TEST_DIR)
+  var isTestFile = function(filePath) {
+    return ( path.extname(filePath) == '.js'
+            || path.extname(filePath) == '.coffee'
+            || path.extname(filePath) == '.litcoffee'
+           );
+  };
 
   var self = this;
-
+  //XXX should be changed to colon separated METEOR_MOCHA_TEST_DIRS
   var addFiles = function(dir){
     files = fs.readdirSync(dir)
     files.forEach(function(file){
@@ -39,9 +41,11 @@ Package.on_use(function (api, where) {
       if (stats.isDirectory()) {
         addFiles((filePath));
       } else if (stats.isFile()) {
-        api.add_files([relativePath], ["client", "server"]);
+        if ( isTestFile(filePath) )
+          api.add_files([relativePath], ["client", "server"]);
       }
     })
   }
   addFiles(process.env.METEOR_MOCHA_TEST_DIR);
+
 ;})
