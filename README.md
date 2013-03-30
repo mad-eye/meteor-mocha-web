@@ -33,7 +33,12 @@ $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
 ## Optional Setup
 
 ### Setting up PhantomJS/Mocha 
-TODO
+
+```bash
+  npm install -g phantomjs
+  npm install -g mocha-phantomjs
+  mocha-phantomjs http://localhost:3000
+```
 
 ## Questions?
 This package is in its early stages, so please feel free to ask questions, raise issues, or submit pull requests.
