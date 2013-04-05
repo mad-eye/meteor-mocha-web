@@ -1,2 +1,6 @@
 //makes the bdd interface available (describe, it before, after, etc
-mocha.setup("bdd");
+if(Meteor.settings.public.mocha_setup_args) {
+    mocha.setup(Meteor.settings.public.mocha_setup_args);
+} else {
+    mocha.setup("bdd");
+}
