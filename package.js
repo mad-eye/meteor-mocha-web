@@ -16,9 +16,9 @@ Package.on_use(function (api, where) {
     console.log("METEOR_MOCHA_TEST_DIRS is undefined, not including meteor-mocha-web files");
     return;
   }
-  var path = require("path");
-  var fs = require("fs");
-  var util = require("util");
+  var path = Npm.require("path");
+  var fs = Npm.require("fs");
+  var util = Npm.require("util");
 
   api.add_files(["mochastub.js", "chai.js"], ["server"]);
   api.add_files(['mocha.js', "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
