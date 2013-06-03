@@ -45,6 +45,17 @@ $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
 
 ## Optional Setup
 
+### Assertion Libraries
+We've included the [chai](http://chaijs.com/) assertion library, but you can include other assertion libraries as
+well.  Chai is included under the `chai` variable.  If you include in your file
+
+    assert = chai.assert
+    
+you can use assert as you normally would in Node.  (We did not do this automatically so that we didn't pollute the global namespace).
+
+Note that since these tests are running client side, you don't have the normal access to `require`.
+
+
 ### Setting up PhantomJS/Mocha 
 
 ```bash
