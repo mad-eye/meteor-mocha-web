@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "run mocha tests in the browser"
+  summary: "Run mocha tests in the browser"
 });
 
 Package.on_use(function (api, where) {
@@ -16,12 +16,13 @@ Package.on_use(function (api, where) {
     console.log("METEOR_MOCHA_TEST_DIRS is undefined, not including meteor-mocha-web files");
     return;
   }
+
+  api.add_files(["mocha.js", "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
+  api.add_files(["mochastub.js", "chai.js"], ["server"]);
+
   var path = Npm.require("path");
   var fs = Npm.require("fs");
   var util = Npm.require("util");
-
-  api.add_files(["mochastub.js", "chai.js"], ["server"]);
-  api.add_files(['mocha.js', "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
 
   var isTestFile = function(filePath) {
     return ( path.extname(filePath) == '.js'
@@ -33,19 +34,20 @@ Package.on_use(function (api, where) {
   var self = this;
   //XXX should be changed to colon separated METEOR_MOCHA_TEST_DIRS
   var addFiles = function(dir){
-    files = fs.readdirSync(dir)
+    files = fs.readdirSync(dir);
     files.forEach(function(file){
       var filePath = path.join(dir, file);
-      var relativePath = path.relative(self.source_root, filePath)
-      stats = fs.statSync(filePath)
+      var relativePath = path.relative(self.source_root, filePath);
+      stats = fs.statSync(filePath);
       if (stats.isDirectory()) {
         addFiles((filePath));
       } else if (stats.isFile()) {
-        if ( isTestFile(filePath) )
-          api.add_files([relativePath], ["client", "server"]);
+        if ( isTestFile(filePath) ){
+          api.add_files([filePath], ["client", "server"]);
+        }
       }
-    })
-  }
+    });
+  };
   if (process.env.METEOR_MOCHA_TEST_DIR){
     addFiles(process.env.METEOR_MOCHA_TEST_DIR);
   }
@@ -54,4 +56,4 @@ Package.on_use(function (api, where) {
       addFiles(testDir);
     });
   }
-;})
+});
