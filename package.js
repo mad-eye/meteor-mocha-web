@@ -1,3 +1,4 @@
+
 Package.describe({
   summary: "Run mocha tests in the browser"
 });
@@ -32,7 +33,6 @@ Package.on_use(function (api, where) {
   };
 
   var self = this;
-  //XXX should be changed to colon separated METEOR_MOCHA_TEST_DIRS
   var addFiles = function(dir){
     files = fs.readdirSync(dir);
     files.forEach(function(file){
@@ -49,11 +49,11 @@ Package.on_use(function (api, where) {
     });
   };
   if (process.env.METEOR_MOCHA_TEST_DIR){
-    addFiles(process.env.METEOR_MOCHA_TEST_DIR);
+    addFiles(fs.realpathSync(process.env.METEOR_MOCHA_TEST_DIR));
   }
   if (process.env.METEOR_MOCHA_TEST_DIRS){
     process.env.METEOR_MOCHA_TEST_DIRS.split(":").forEach(function(testDir){
-      addFiles(testDir);
+      addFiles(fs.realpathSync(testDir));
     });
   }
 });
