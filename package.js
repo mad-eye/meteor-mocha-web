@@ -1,4 +1,3 @@
-
 Package.describe({
   summary: "Run mocha tests in the browser"
 });
