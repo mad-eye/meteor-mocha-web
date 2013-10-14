@@ -51,7 +51,7 @@ Package.on_use(function (api, where) {
         addFiles((filePath));
       } else if (stats.isFile()) {
         if ( isTestFile(filePath) ){
-          api.add_files([filePath], ["client", "server"]);
+          api.add_files([relativePath], ["client", "server"]);
         }
       }
     });

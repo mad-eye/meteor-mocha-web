@@ -1,9 +1,9 @@
 var crypto = Npm.require("crypto");
 var path = Npm.require('path');
 var fs = Npm.require("fs");
-
 var testFiles = listTestFiles();
-writeHash(hash(JSON.stringify(testFiles)));
+
+writeHash(hash(JSON.stringify(testFiles.sort())));
 
 function listTestFiles(){
   var testFiles = [];
@@ -11,7 +11,7 @@ function listTestFiles(){
     testFiles = lsDirs([process.env.METEOR_MOCHA_TEST_DIR]);
   }
   if (process.env.METEOR_MOCHA_TEST_DIRS){
-    testFiles.concat(lsDirs(process.env.MOCHA_MOCHA_TEST_DIRS.split(":")));
+    testFiles.concat(lsDirs(process.env.METEOR_MOCHA_TEST_DIRS.split(":")));
   }
   return testFiles;
 }
@@ -36,7 +36,16 @@ function packageDirectory(){
 
 //write out the hash to #{packageDirectory}/testFileHash
 function writeHash(hash){
-  fs.writeFileSync(path.join(packageDirectory(), "testFileHash"), hash);
+  hashFilePath = path.join(packageDirectory(), "testFileHash");
+  hashFileBody = "//" + hash;
+  var existingHashBody = "";
+  if (fs.existsSync(hashFilePath)){
+    existingHashBody = fs.readFileSync(hashFilePath, "utf-8");
+  }
+  if (hashFileBody === existingHashBody){
+    return;
+  }
+  fs.writeFileSync(hashFilePath, hashFileBody);
 }
 
 function hash(string){
