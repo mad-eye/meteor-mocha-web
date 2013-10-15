@@ -25,9 +25,9 @@ Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will o
 1. Install Meteorite if you haven't already `npm install -g meteorite`
 2. Add the smart package to your project. `mrt add mocha-web`
 3. Add `{{> mochaTestReport}}` to the template where you'd like to see your test results.
-4. When running `mrt`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
+4. When running `meteor`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
 ```
-$ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
+$ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" meteor
 ```
 5. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below)
 

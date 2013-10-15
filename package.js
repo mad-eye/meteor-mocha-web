@@ -41,7 +41,8 @@ Package.on_use(function (api, where) {
 
   var self = this;
   var addFiles = function(dir){
-    files = fs.readdirSync(dir);
+    dir = path.resolve(dir);
+    var files = fs.readdirSync(dir);
     files.forEach(function(file){
       var filePath = path.join(dir, file);
       var packagePath = path.join(path.resolve("."), "packages", "meteor-mocha");
