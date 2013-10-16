@@ -3,6 +3,7 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
+
   var fs = Npm.require("fs");
   var path = Npm.require("path");
   var util = Npm.require("util");
@@ -16,7 +17,7 @@ Package.on_use(function (api, where) {
 
   //dummy file to force package reload when files are added or env
   //variable changes
-  var testFileHashFilename = "packages/mocha-web/testFileHash"
+  var testFileHashFilename = "packages/mocha-web/testFileHash";
   if (! fs.existsSync(testFileHashFilename)){
     fs.writeFileSync(testFileHashFilename, "");
   }
@@ -45,7 +46,8 @@ Package.on_use(function (api, where) {
     var files = fs.readdirSync(dir);
     files.forEach(function(file){
       var filePath = path.join(dir, file);
-      var packagePath = path.join(path.resolve("."), "packages", "meteor-mocha");
+      var packagePath = path.join(path.resolve("."), "packages", "mocha-web");
+
       var relativePath = path.relative(packagePath, filePath);
       stats = fs.statSync(filePath);
       if (stats.isDirectory()) {
