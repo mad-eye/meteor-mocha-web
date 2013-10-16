@@ -8,19 +8,20 @@ var projectDirectory = basePath.split('.meteor')[0];
 function listTestFiles(){
   var testFiles = [];
   if (process.env.METEOR_MOCHA_TEST_DIR){
-    testFiles = lsDirs([process.env.METEOR_MOCHA_TEST_DIR]);
+    testFiles = testFiles.concat(lsDirs([process.env.METEOR_MOCHA_TEST_DIR]));
   }
   if (process.env.METEOR_MOCHA_TEST_DIRS){
-    testFiles.concat(lsDirs(process.env.METEOR_MOCHA_TEST_DIRS.split(":")));
+    testFiles = testFiles.concat(lsDirs(process.env.METEOR_MOCHA_TEST_DIRS.split(":")));
   }
   return testFiles;
 }
 
 function lsDirs(dirs){
   var files = [];
-  dirs.forEach(function(dir){
+  for (var i=0; i< dirs.length; i++){
+    var dir = dirs[i];
     files = files.concat(fs.readdirSync(path.resolve(projectDirectory, dir)));
-  });
+  }
   return files;
 }
 
