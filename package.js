@@ -9,7 +9,7 @@ Package.on_use(function (api, where) {
   var util = Npm.require("util");
 
   //coffeescript included here in case you want to write your tests in it
-  api.use(["coffeescript", "templating"], ["client"]);
+  api.use(["coffeescript", "templating", "madeye-common"], ["client", "server"]);
   //always include test report template (it will be just be an empty
   //div if not tests/framework are added)
   api.add_files(["testReport.html"], ["client"]);
@@ -67,4 +67,5 @@ Package.on_use(function (api, where) {
       addFiles(fs.realpathSync(testDir));
     });
   }
+  api.export("mocha", "client");
 });
