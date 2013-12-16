@@ -36,8 +36,9 @@ Package.on_use(function (api, where) {
     files = fs.readdirSync(dir);
     files.forEach(function(file){
       var filePath = path.join(dir, file);
-      var relativePath = path.relative(self.source_root, filePath);
-      stats = fs.statSync(filePath);
+      var sourceRoot = self.source_root || "";
+      var relativePath = path.relative(sourceRoot, filePath);
+      stats = fs.statSync(filePath)
       if (stats.isDirectory()) {
         addFiles((filePath));
       } else if (stats.isFile()) {
