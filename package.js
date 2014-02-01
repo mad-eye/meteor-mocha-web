@@ -2,6 +2,8 @@ Package.describe({
   summary: "Run mocha tests in the browser"
 });
 
+Npm.depends({mocha: "1.17.1"});
+
 Package.on_use(function (api, where) {
   //coffeescript included here in case you want to write your tests in it
   api.use(["coffeescript", "templating"], ["client"]);
