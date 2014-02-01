@@ -1,0 +1,57 @@
+{
+  "dependencies": {
+    "mocha": {
+      "version": "1.17.1",
+      "dependencies": {
+        "commander": {
+          "version": "2.0.0"
+        },
+        "growl": {
+          "version": "1.7.0"
+        },
+        "jade": {
+          "version": "0.26.3",
+          "dependencies": {
+            "commander": {
+              "version": "0.6.1"
+            },
+            "mkdirp": {
+              "version": "0.3.0"
+            }
+          }
+        },
+        "diff": {
+          "version": "1.0.7"
+        },
+        "debug": {
+          "version": "0.7.4"
+        },
+        "mkdirp": {
+          "version": "0.3.5"
+        },
+        "glob": {
+          "version": "3.2.3",
+          "dependencies": {
+            "minimatch": {
+              "version": "0.2.14",
+              "dependencies": {
+                "lru-cache": {
+                  "version": "2.5.0"
+                },
+                "sigmund": {
+                  "version": "1.0.0"
+                }
+              }
+            },
+            "graceful-fs": {
+              "version": "2.0.1"
+            },
+            "inherits": {
+              "version": "2.0.1"
+            }
+          }
+        }
+      }
+    }
+  }
+}

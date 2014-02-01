@@ -4,9 +4,13 @@ Package.describe({
 
 Npm.depends({mocha: "1.17.1"});
 
+//TODO break this out into a separate package and depend weakly
+//Npm.depends({chai: "1.9.0"});
+
 Package.on_use(function (api, where) {
-  //coffeescript included here in case you want to write your tests in it
-  api.use(["coffeescript", "templating"], ["client"]);
+  //TODO coffeescript should be a weak dependency
+  api.use(["coffeescript"], ["client", "server"]);
+  api.use(["templating"], ["client"]);
 
   //always include test report template (it will be just be an empty
   //div if not tests/framework are added)
@@ -20,7 +24,7 @@ Package.on_use(function (api, where) {
   }
 
   api.add_files(["mocha.js", "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
-  api.add_files(["mochastub.js", "chai.js"], ["server"]);
+  api.add_files(["serverPreTest.js"], "server");
 
   var path = Npm.require("path");
   var fs = Npm.require("fs");
@@ -34,28 +38,35 @@ Package.on_use(function (api, where) {
   };
 
   var self = this;
-  var addFiles = function(dir){
+
+  var addFiles = function(dir, where){
     files = fs.readdirSync(dir);
     files.forEach(function(file){
+      if (file == 'client') {
+        where = ['client']
+      } else if (file == 'server') {
+        where = ['server']
+      } //Else keep the parent's where
       var filePath = path.join(dir, file);
       var sourceRoot = self.source_root || "";
       var relativePath = path.relative(sourceRoot, filePath);
-      stats = fs.statSync(filePath)
+      stats = fs.statSync(filePath);
       if (stats.isDirectory()) {
-        addFiles((filePath));
+        addFiles(filePath, where);
       } else if (stats.isFile()) {
         if ( isTestFile(filePath) ){
-          api.add_files([filePath], ["client", "server"]);
+          api.add_files([filePath], where);
         }
       }
     });
   };
+
   if (process.env.METEOR_MOCHA_TEST_DIR){
-    addFiles(fs.realpathSync(process.env.METEOR_MOCHA_TEST_DIR));
+    addFiles(fs.realpathSync(process.env.METEOR_MOCHA_TEST_DIR), ["client", "server"]);
   }
   if (process.env.METEOR_MOCHA_TEST_DIRS){
     process.env.METEOR_MOCHA_TEST_DIRS.split(":").forEach(function(testDir){
-      addFiles(fs.realpathSync(testDir));
+      addFiles(fs.realpathSync(testDir), ["client", "server"]);
     });
   }
 });
