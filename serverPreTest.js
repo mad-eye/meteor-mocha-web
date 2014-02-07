@@ -1,12 +1,77 @@
 var Mocha = Npm.require("mocha");
-mocha = new Mocha({ui: "bdd"});
-//this mysterious line brings in all the functions used to describe tests
+
+//Mocha Base Reporter
+var Base = Npm.require("mocha/lib/reporters/base");
+
+function MeteorCollectionTestReporter(runner){
+  Base.call(this, runner);
+  var self = this;
+
+  var MochaWebTests = new Meteor.Collection("mochaWebTests");
+  var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
+
+  function saveTestResult(test){
+    //TODO include test group (describe) information as well
+    MochaWebTests.insert({
+      title: test.title,
+      async: test.async,
+      sync: test.sync,
+      timedOut: test.timedOut,
+      pending: test.pending,
+      type: test.type,
+      duration: test.duration,
+      state: test.state,
+      speed: test.speed
+    });
+  }
+
+  runner.on("start", Meteor.bindEnvironment(
+    function(){
+      MochaWebTestReports.remove({});
+      MochaWebTests.remove({});
+      self.testReportId = MochaWebTestReports.insert({started: Date.now()})
+    },
+    function(err){
+      //TODO handle this better
+      throw err;
+    }
+  ));
+
+  ["pass", "fail", "pending"].forEach(function(testEvent){
+    runner.on(testEvent, Meteor.bindEnvironment(
+      function(test){
+        saveTestResult(test);
+      },
+      function(err){
+        //TODO handle this better
+        throw err;
+      }
+    ));
+  });
+
+  runner.on('end', Meteor.bindEnvironment(function(){
+    MochaWebTestReports.update(self.testReportId, {$set: {
+      tests: self.stats.tests,
+      passes: self.stats.passes,
+      pending: self.stats.pending,
+      failures: self.stats.failures,
+      ended: Date.now()
+    }});
+  }, function(err){
+    //TODO handle this better
+    throw err;
+  }));
+}
+
+mocha = new Mocha({ui: "bdd", reporter: MeteorCollectionTestReporter});
 var mochaExports = {}
-//this line brings captures describe, it, etc.
+//this line retrieves the describe, it, etc. functions and puts them
+//into mochaExports
 mocha.suite.emit("pre-require", mochaExports);
 //console.log(mochaExports);
 
-//patch up test description fucntions so they play nice w/ fibers
+//patch up test description functions so they play nice w/ fibers
+//TODO should export other test description functions here as well
 describe = function (name, func){
   mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
 };
@@ -15,8 +80,6 @@ it = function (name, func){
   mochaExports.it(name, Meteor.bindEnvironment(func, function(err){throw err; }));
 };
 
-//TODO move into a Meteor method
-//TODO use JSON test reporter or something similar
-Meteor.setTimeout(function(){
+Meteor.startup(function(){
   mocha.run();
-}, 4000);
+});
