@@ -22,8 +22,17 @@ function MeteorCollectionTestReporter(runner){
     return MochaWebTestReports.find();
   });
 
+
   function saveTestResult(test){
-    //TODO include test group (describe) information as well
+    function getParents(node, parents){
+      if (!node.parent || node.parent.title == ""){
+        return parents;
+      } else{
+        parents.push(node.parent.title);
+        return getParents(node.parent, parents)
+      }
+    }
+
     MochaWebTests.insert({
       title: test.title,
       async: test.async,
@@ -33,7 +42,8 @@ function MeteorCollectionTestReporter(runner){
       type: test.type,
       duration: test.duration,
       state: test.state,
-      speed: test.speed
+      speed: test.speed,
+      parents: getParents(test, [])
     });
   }
 
