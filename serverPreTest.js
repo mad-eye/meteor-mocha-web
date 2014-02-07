@@ -10,6 +10,18 @@ function MeteorCollectionTestReporter(runner){
   var MochaWebTests = new Meteor.Collection("mochaWebTests");
   var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
 
+  //TODO should not bother publishing if autopublish is turned on
+  Meteor.publish("mochaServerSideTests", function(includeAll){
+    if(includeAll)
+      return MochaWebTests.find();
+    else
+      return MochaWebTests.find({state: "failed"});
+  });
+
+  Meteor.publish("mochaServerSideTestReports", function(){
+    return MochaWebTestReports.find();
+  });
+
   function saveTestResult(test){
     //TODO include test group (describe) information as well
     MochaWebTests.insert({
