@@ -5,6 +5,7 @@ Package.describe({
 Npm.depends({mocha: "1.17.1"});
 
 //TODO break this out into a separate package and depend weakly
+//Require npm assertion library if it doesn't exist..
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
@@ -43,9 +44,9 @@ Package.on_use(function (api, where) {
     files = fs.readdirSync(dir);
     files.forEach(function(file){
       if (file == 'client') {
-        where = ['client']
+        where = ['client'];
       } else if (file == 'server') {
-        where = ['server']
+        where = ['server'];
       } //Else keep the parent's where
       var filePath = path.join(dir, file);
       var sourceRoot = self.source_root || "";

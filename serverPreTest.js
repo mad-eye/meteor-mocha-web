@@ -7,12 +7,13 @@ function MeteorCollectionTestReporter(runner){
   Base.call(this, runner);
   var self = this;
 
+  //TODO move these into the bottom startup block
   var MochaWebTests = new Meteor.Collection("mochaWebTests");
   var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
 
   //TODO should not bother publishing if autopublish is turned on
-  Meteor.publish("mochaServerSideTests", function(includeAll){
-    if(includeAll)
+  Meteor.publish("mochaServerSideTests", function(options){
+    if(options.includeAll)
       return MochaWebTests.find();
     else
       return MochaWebTests.find({state: "failed"});
@@ -25,12 +26,17 @@ function MeteorCollectionTestReporter(runner){
 
   function saveTestResult(test){
     function getParents(node, parents){
-      if (!node.parent || node.parent.title == ""){
+      if (!node.parent || node.parent.title === ""){
         return parents;
       } else{
         parents.push(node.parent.title);
-        return getParents(node.parent, parents)
+        return getParents(node.parent, parents);
       }
+    }
+
+    var err = null
+    if (test.err){
+      err = {message: test.err.message, stack: test.err.stack};
     }
 
     MochaWebTests.insert({
@@ -43,7 +49,8 @@ function MeteorCollectionTestReporter(runner){
       duration: test.duration,
       state: test.state,
       speed: test.speed,
-      parents: getParents(test, [])
+      parents: getParents(test, []),
+      err: err
     });
   }
 
@@ -54,7 +61,6 @@ function MeteorCollectionTestReporter(runner){
       self.testReportId = MochaWebTestReports.insert({started: Date.now()})
     },
     function(err){
-      //TODO handle this better
       throw err;
     }
   ));
@@ -65,7 +71,6 @@ function MeteorCollectionTestReporter(runner){
         saveTestResult(test);
       },
       function(err){
-        //TODO handle this better
         throw err;
       }
     ));
@@ -80,13 +85,12 @@ function MeteorCollectionTestReporter(runner){
       ended: Date.now()
     }});
   }, function(err){
-    //TODO handle this better
     throw err;
   }));
 }
 
 mocha = new Mocha({ui: "bdd", reporter: MeteorCollectionTestReporter});
-var mochaExports = {}
+var mochaExports = {};
 //this line retrieves the describe, it, etc. functions and puts them
 //into mochaExports
 mocha.suite.emit("pre-require", mochaExports);
