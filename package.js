@@ -15,7 +15,7 @@ Package.on_use(function (api, where) {
 
   //always include test report template (it will be just be an empty
   //div if not tests/framework are added)
-  api.add_files(["testReport.html"], "client");
+  api.add_files(["testReport.html", "testReport.js"], "client");
 
   //for environments like production METEOR_MOCHA_TEST_DIR should be
   //undefined and the test framework will not be included
@@ -26,6 +26,10 @@ Package.on_use(function (api, where) {
 
   api.add_files(["mocha.js", "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
   api.add_files(["serverPreTest.js"], "server");
+
+
+  api.export("webTests", "client");
+  api.export("webTestReports", "client");
 
   var path = Npm.require("path");
   var fs = Npm.require("fs");

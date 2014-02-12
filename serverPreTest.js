@@ -59,9 +59,10 @@ function MeteorCollectionTestReporter(runner){
   var MochaWebTests = new Meteor.Collection("mochaWebTests");
   var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
 
+
   //TODO should not bother publishing if autopublish is turned on
   Meteor.publish("mochaServerSideTests", function(options){
-    if(options.includeAll)
+    if(options && options.includeAll)
       return MochaWebTests.find();
     else
       return MochaWebTests.find({state: "failed"});

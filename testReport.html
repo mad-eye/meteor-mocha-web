@@ -1,3 +1,19 @@
 <template name="mochaTestReport">
   <div id="mocha"></div>
 </template>
+
+<template name="serverTestReport">
+
+  {{#with testReport}}
+    <h2>Server Test Report<h1>
+    <h3>{{failures}} failing, {{passes}} passing, {{pending}} pending</h3>
+  {{/with}}
+  <hr />
+
+  {{#each failedTests}}
+    <h3>{{title}}</h3>
+    <h4>in {{parents}}</h4>
+    <pre>{{err.stack}}</pre>
+  {{/each}}
+
+</template>
