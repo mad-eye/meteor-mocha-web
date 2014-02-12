@@ -24,12 +24,14 @@ Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will o
 
 1. Install Meteorite if you haven't already `npm install -g meteorite`
 2. Add the smart package to your project. `mrt add mocha-web`
-3. Add `{{> mochaTestReport}}` to the template where you'd like to see your test results.
+3. Add `{{> mochaTestReport}}` to the template where you'd like to see your client test results.
+4. Add `{{> serverTestReport}}` to the template where you'd like to your server test results.
 4. When running `mrt`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
-```
-$ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
-```
-5. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below)
+  ```
+  $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
+  ```
+5. Whenever you add a test file or change the `METEOR_MOCHA_TEST_DIRS` environment variable, you will need to `meteor rebuild-all` to rebuild the mocha-web package and bring in the correct test files.
+6. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below, this currently only works on the client-side)
 
 ```javascript
 {
