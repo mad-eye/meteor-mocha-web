@@ -18,7 +18,7 @@ describe "Leaderboard", ->
 ```
 You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
 
-Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will only exist on environments you specify.
+Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will only exist on environments you specify. Any tests in `client` or `server` subdirectories are run exclusively on the client or server following the normal Meteor convention.
 
 ## Setup
 
