@@ -49,7 +49,7 @@ var moddedBindEnvironment = function (func, onException, _this) {
 
 
 //Mocha Base Reporter
-var Base = Npm.require("mocha/lib/reporters/base");
+var Base = Npm.require("mocha/lib/reporters").Base;
 
 function MeteorCollectionTestReporter(runner){
   Base.call(this, runner);
