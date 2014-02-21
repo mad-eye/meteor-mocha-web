@@ -1,6 +1,7 @@
 var Mocha = Npm.require("mocha");
 var Fiber = Npm.require("fibers");
 var _ = Npm.require("underscore");
+chai = Npm.require("chai");
 
 //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
 //except the wrapped function has an argument (mocha distinguishes
