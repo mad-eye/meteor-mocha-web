@@ -29,7 +29,9 @@ Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will o
 ```
 $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
 ```
-5. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below)
+5. Whenever you add a test file or change the METEOR_MOCHA_TEST_DIRS environment variable, you will need to meteor rebuild-all to rebuild the mocha-web package and bring in the correct test files.
+6. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below)
+
 
 ```javascript
 {
