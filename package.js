@@ -4,7 +4,7 @@ Package.describe({
 
 Package.on_use(function (api, where) {
   //coffeescript included here in case you want to write your tests in it
-  api.use(["coffeescript", "templating"], ["client"]);
+  api.use(["coffeescript", "templating", "less"], ["client"]);
 
   //always include test report template (it will be just be an empty
   //div if not tests/framework are added)
@@ -17,7 +17,7 @@ Package.on_use(function (api, where) {
     return;
   }
 
-  api.add_files(["mocha.js", "chai.js", "mocha.css", "preTest.js", "testRunner.js"], "client");
+  api.add_files(["mocha.js", "chai.js", "mocha.less", "preTest.js", "testRunner.js"], "client");
   api.add_files(["mochastub.js", "chai.js"], ["server"]);
 
   var path = Npm.require("path");
