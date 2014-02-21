@@ -26,7 +26,7 @@ Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will o
 2. Add the smart package to your project. `mrt add mocha-web`
 3. Add `{{> mochaTestReport}}` to the template where you'd like to see your client test results.
 4. Add `{{> serverTestReport}}` to the template where you'd like to your server test results.
-4. When running `mrt`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
+4. When running `meteor`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
   ```
   $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
   ```
