@@ -1,5 +1,5 @@
 <template name="mochaTestReport">
-  <div id="mochaClientTestReport">
+  <div class="mochaTestReport">
     <div id="mocha"></div>
   </div>
 </template>
@@ -12,10 +12,29 @@
   {{/with}}
   <hr />
 
-  {{#each failedTests}}
-    <h3>{{title}}</h3>
-    <h4>in {{parents}}</h4>
-    <pre>{{err.stack}}</pre>
-  {{/each}}
+  <div class="mochaTestReport">
+    <ul id="mocha-report">
+      {{#each rootSuites}}
+        {{> mochaTestObject}}
+      {{/each}}
+    </ul>
+  </div>
+</template>
 
+<template name="mochaTestObject">
+  {{#if suite }}
+    <li class="suite">
+      <h1>{{title}}</h1>
+      {{#each children}}
+        {{> mochaTestObject}}
+      {{/each}}
+    </li>
+  {{else}}
+    <li class="test {{stateClass}} {{speed}}">
+      <h2>{{title}} <span class="duration">{{duration}}ms</span></h2>
+      {{#if err}}
+      <pre><code>{{err.stack}}</code></pre>
+      {{/if}}
+    </li>
+  {{/if}}
 </template>

@@ -14,7 +14,7 @@ Npm.depends({
 Package.on_use(function (api, where) {
   //TODO coffeescript should be a weak dependency
   api.use(["coffeescript"], ["client", "server"]);
-  api.use(["templating", "less"], ["client"]);
+  api.use(["templating", "less", "underscore"], ["client"]);
 
   //always include test report template (it will be just be an empty
   //div if not tests/framework are added)
@@ -29,10 +29,6 @@ Package.on_use(function (api, where) {
 
   api.add_files(["mocha.js", "chai.js", "mocha.less", "preTest.js", "testRunner.js"], "client");
   api.add_files(["serverPreTest.js"], "server");
-
-
-  api.export("webTests", "client");
-  api.export("webTestReports", "client");
 
   var path = Npm.require("path");
   var fs = Npm.require("fs");

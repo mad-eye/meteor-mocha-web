@@ -58,6 +58,7 @@ function MeteorCollectionTestReporter(runner){
 
   //TODO move these into the bottom startup block
   var MochaWebTests = new Meteor.Collection("mochaWebTests");
+  var MochaWebSuites = new Meteor.Collection("mochaWebSuites");
   var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
 
 
@@ -73,12 +74,39 @@ function MeteorCollectionTestReporter(runner){
     return MochaWebTestReports.find();
   });
 
+  Meteor.publish("mochaServerSideSuites", function(){
+    return MochaWebSuites.find();
+  });
+
   function saveTestResult(test){
+
+    //node can be a test or a suite
+    //returns the ID of the node's immediate parent
+    function findOrInsertParents(node){
+      nodeParents = getParents(node, []);
+      //no parents to insert
+      if (nodeParents.length == 0)
+        return null;
+      parent = MochaWebSuites.findOne(node.parentSuiteId);
+      if (!parent) {
+        grandparentSuiteId = findOrInsertParents(node.parent);
+      }
+      else {
+        return parent._id;
+      }
+      return MochaWebSuites.insert({
+        title: node.parent.title,
+        path: nodeParents,
+        suite: true,
+        parentSuiteId: grandparentSuiteId
+      });
+    }
+
     function getParents(node, parents){
       if (!node.parent || node.parent.title === ""){
         return parents;
       } else{
-        parents.push(node.parent.title);
+        parents.unshift(node.parent.title);
         return getParents(node.parent, parents);
       }
     }
@@ -88,6 +116,8 @@ function MeteorCollectionTestReporter(runner){
       err = {message: test.err.message, stack: test.err.stack};
       console.log(err.message, err.stack);
     }
+
+    var parentSuiteId = findOrInsertParents(test);
 
     MochaWebTests.insert({
       title: test.title,
@@ -99,7 +129,7 @@ function MeteorCollectionTestReporter(runner){
       duration: test.duration,
       state: test.state,
       speed: test.speed,
-      parents: getParents(test, []),
+      parentSuiteId: parentSuiteId,
       err: err
     });
   }
@@ -108,6 +138,7 @@ function MeteorCollectionTestReporter(runner){
     function(){
       MochaWebTestReports.remove({});
       MochaWebTests.remove({});
+      MochaWebSuites.remove({});
       self.testReportId = MochaWebTestReports.insert({started: Date.now()})
     },
     function(err){
