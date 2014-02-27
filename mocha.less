@@ -1,37 +1,35 @@
-@charset "utf-8";
-
-#mochaClientTestReport {
+.mochaTestReport {
   font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  #mocha ul, #mocha li {
+  ul, li {
       margin: 0;
       padding: 0;
   }
 
-  #mocha ul {
+  ul {
       list-style: none;
   }
 
-  #mocha h1, #mocha h2 {
+  h1,  h2 {
       margin: 0;
   }
 
-  #mocha h1 {
+  h1 {
       margin-top: 15px;
       font-size: 1em;
       font-weight: 200;
   }
 
-  #mocha h1 a {
+  h1 a {
       text-decoration: none;
       color: inherit;
   }
 
-  #mocha h1 a:hover {
+  h1 a:hover {
       text-decoration: underline;
   }
 
-  #mocha .suite .suite h1 {
+  .suite .suite h1 {
       margin-top: 0;
       font-size: .8em;
   }
@@ -40,35 +38,35 @@
       display: none;
   }
 
-  #mocha h2 {
+  h2 {
       font-size: 12px;
       font-weight: normal;
       cursor: pointer;
   }
 
-  #mocha .suite {
+  .suite {
       margin-left: 15px;
   }
 
-  #mocha .test {
+  .test {
       margin-left: 15px;
       overflow: hidden;
   }
 
-  #mocha .test.pending:hover h2::after {
+  .test.pending:hover h2::after {
       content: '(pending)';
       font-family: arial;
   }
 
-  #mocha .test.pass.medium .duration {
+  .test.pass.medium .duration {
       background: #C09853;
   }
 
-  #mocha .test.pass.slow .duration {
+  .test.pass.slow .duration {
       background: #B94A48;
   }
 
-  #mocha .test.pass::before {
+  .test.pass::before {
       content: '✓';
       font-size: 12px;
       display: block;
@@ -77,7 +75,7 @@
       color: #00d6b2;
   }
 
-  #mocha .test.pass .duration {
+  .test.pass .duration {
       font-size: 9px;
       margin-left: 5px;
       padding: 2px 5px;
@@ -92,28 +90,28 @@
       border-radius: 5px;
   }
 
-  #mocha .test.pass.fast .duration {
+  .test.pass.fast .duration {
       display: none;
   }
 
-  #mocha .test.pending {
+  .test.pending {
       color: #0b97c4;
   }
 
-  #mocha .test.pending::before {
+  .test.pending::before {
       content: '◦';
       color: #0b97c4;
   }
 
-  #mocha .test.fail {
+  .test.fail {
       color: #c00;
   }
 
-  #mocha .test.fail pre {
+  .test.fail pre {
       color: black;
   }
 
-  #mocha .test.fail::before {
+  .test.fail::before {
       content: '✖';
       font-size: 12px;
       display: block;
@@ -122,13 +120,13 @@
       color: #c00;
   }
 
-  #mocha .test pre.error {
+  .test pre.error {
       color: #c00;
       max-height: 300px;
       overflow: auto;
   }
 
-  #mocha .test pre {
+  .test pre {
       display: block;
       float: left;
       clear: left;
@@ -143,11 +141,11 @@
       -moz-box-shadow: 0 1px 3px #eee;
   }
 
-  #mocha .test h2 {
+  .test h2 {
       position: relative;
   }
 
-  #mocha .test a.replay {
+  .test a.replay {
       position: absolute;
       top: 3px;
       right: 0;
@@ -169,7 +167,7 @@
       color: #888;
   }
 
-  #mocha .test:hover a.replay {
+  .test:hover a.replay {
       opacity: 1;
   }
 
