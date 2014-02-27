@@ -31,7 +31,7 @@ Template.mochaTestObject.helpers({
   children: function(){
     var suites = MochaWebSuites.find({parentSuiteId: this._id}).fetch();
     var tests = MochaWebTests.find({parentSuiteId: this._id}).fetch();
-    return suites.concat(tests);
+    return tests.concat(suites);
   },
 
   stateClass: function(){

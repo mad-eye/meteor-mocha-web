@@ -83,11 +83,11 @@ function MeteorCollectionTestReporter(runner){
     //node can be a test or a suite
     //returns the ID of the node's immediate parent
     function findOrInsertParents(node){
-      nodeParents = getParents(node, []);
+      var bloodline = getParents(node, []);
       //no parents to insert
-      if (nodeParents.length == 0)
+      if (bloodline.length == 0)
         return null;
-      parent = MochaWebSuites.findOne(node.parentSuiteId);
+      parent = MochaWebSuites.findOne({bloodline: bloodline});
       if (!parent) {
         grandparentSuiteId = findOrInsertParents(node.parent);
       }
@@ -96,7 +96,7 @@ function MeteorCollectionTestReporter(runner){
       }
       return MochaWebSuites.insert({
         title: node.parent.title,
-        path: nodeParents,
+        bloodline: bloodline,
         suite: true,
         parentSuiteId: grandparentSuiteId
       });
