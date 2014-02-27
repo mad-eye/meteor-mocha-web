@@ -2,7 +2,7 @@ Package.describe({
   summary: "Run mocha tests in the browser"
 });
 
-yNpm.depends({
+Npm.depends({
   mocha: "1.17.1",
   chai: "1.9.0"
 });
