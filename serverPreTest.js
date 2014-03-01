@@ -64,6 +64,7 @@ function MeteorCollectionTestReporter(runner){
 
   //TODO should not bother publishing if autopublish is turned on
   Meteor.publish("mochaServerSideTests", function(options){
+    check(options, {includeAll: Boolean});
     if(options && options.includeAll)
       return MochaWebTests.find();
     else
