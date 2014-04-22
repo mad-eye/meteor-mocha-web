@@ -6,11 +6,11 @@
 
 <template name="serverTestReport">
 
+  <hr>
   {{#with testReport}}
     <h2>Server Test Report</h2>
     <h3>{{failures}} failing, {{passes}} passing, {{pending}} pending</h3>
   {{/with}}
-  <hr />
 
   <div class="mochaTestReport">
     <ul id="mocha-report">
