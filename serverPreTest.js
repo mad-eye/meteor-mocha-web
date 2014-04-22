@@ -219,5 +219,7 @@ describe = function (name, func){
 });
 
 Meteor.startup(function(){
-  mocha.run();
+  Meteor.setTimeout(function(){
+    mocha.run();
+  }, 0);
 });
