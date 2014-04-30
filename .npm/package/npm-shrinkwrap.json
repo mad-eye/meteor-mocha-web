@@ -1,5 +1,21 @@
 {
   "dependencies": {
+    "chai": {
+      "version": "1.9.0",
+      "dependencies": {
+        "assertion-error": {
+          "version": "1.0.0"
+        },
+        "deep-eql": {
+          "version": "0.1.3",
+          "dependencies": {
+            "type-detect": {
+              "version": "0.1.1"
+            }
+          }
+        }
+      }
+    },
     "mocha": {
       "version": "1.17.1",
       "dependencies": {
@@ -48,22 +64,6 @@
             },
             "inherits": {
               "version": "2.0.1"
-            }
-          }
-        }
-      }
-    },
-    "chai": {
-      "version": "1.9.0",
-      "dependencies": {
-        "assertion-error": {
-          "version": "1.0.0"
-        },
-        "deep-eql": {
-          "version": "0.1.3",
-          "dependencies": {
-            "type-detect": {
-              "version": "0.1.1"
             }
           }
         }
