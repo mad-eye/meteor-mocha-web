@@ -195,11 +195,30 @@ describe = function (name, func){
 //finished, because the test runner runs outside a fiber.
 
 //It is possible that the mocha test runner could be run from within a
-//fiber, but it was unclear to me ow that could be done without
+//fiber, but it was unclear to me how that could be done without
 //forking mocha itself.
 
-["it", "before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
-  global[testFunctionName] = function (name, func){
+
+global['it'] = function (name, func){
+  wrappedFunc = function(callback){
+    if (func.length == 0){
+      func();
+      callback();
+    }
+    else {
+      func(callback);
+    }
+  }
+
+  boundWrappedFunction = moddedBindEnvironment(wrappedFunc, function(err){
+    throw err;
+  });
+
+  mochaExports['it'](name, boundWrappedFunction);
+};
+
+["before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
+  global[testFunctionName] = function (func){
     wrappedFunc = function(callback){
       if (func.length == 0){
         func();
@@ -214,7 +233,7 @@ describe = function (name, func){
       throw err;
     });
 
-    mochaExports[testFunctionName](name, boundWrappedFunction);
+    mochaExports[testFunctionName](boundWrappedFunction);
   }
 });
 
