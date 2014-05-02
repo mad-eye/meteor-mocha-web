@@ -1,7 +1,10 @@
 var Mocha = Npm.require("mocha");
 var Fiber = Npm.require("fibers");
+var fs = Npm.require("fs");
 var _ = Npm.require("underscore");
 chai = Npm.require("chai");
+
+var readFile = Meteor._wrapAsync(fs.readFile);
 
 //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
 //except the wrapped function has an argument (mocha distinguishes
@@ -48,99 +51,29 @@ var moddedBindEnvironment = function (func, onException, _this) {
   };
 };
 
-
-//Mocha Base Reporter
 var Base = Npm.require("mocha/lib/reporters").Base;
 
 function MeteorCollectionTestReporter(runner){
   Base.call(this, runner);
   var self = this;
 
-  //TODO move these into the bottom startup block
-  var MochaWebTests = new Meteor.Collection("mochaWebTests");
-  var MochaWebSuites = new Meteor.Collection("mochaWebSuites");
-  var MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
-
-
-  //TODO should not bother publishing if autopublish is turned on
-  Meteor.publish("mochaServerSideTests", function(options){
-    check(options, {includeAll: Boolean});
-    if(options && options.includeAll)
-      return MochaWebTests.find();
-    else
-      return MochaWebTests.find({state: "failed"});
-  });
-
-  Meteor.publish("mochaServerSideTestReports", function(){
-    return MochaWebTestReports.find();
-  });
-
-  Meteor.publish("mochaServerSideSuites", function(){
-    return MochaWebSuites.find();
-  });
-
   function saveTestResult(test){
-
-    //node can be a test or a suite
-    //returns the ID of the node's immediate parent
-    function findOrInsertParents(node){
-      var bloodline = getParents(node, []);
-      //no parents to insert
-      if (bloodline.length == 0)
-        return null;
-      parent = MochaWebSuites.findOne({bloodline: bloodline});
-      if (!parent) {
-        grandparentSuiteId = findOrInsertParents(node.parent);
+    // console.log("TEST", test)
+    Meteor.call("postResult", {
+      id: Meteor.uuid(),
+      name: test.title,
+      framework: "mocha-web",
+      result: test.state
+    }, function(error, result){
+      if (error){
+        console.error("ERROR SAVING TEST", error);
       }
-      else {
-        return parent._id;
-      }
-      return MochaWebSuites.insert({
-        title: node.parent.title,
-        bloodline: bloodline,
-        suite: true,
-        parentSuiteId: grandparentSuiteId
-      });
-    }
-
-    function getParents(node, parents){
-      if (!node.parent || node.parent.title === ""){
-        return parents;
-      } else{
-        parents.unshift(node.parent.title);
-        return getParents(node.parent, parents);
-      }
-    }
-
-    var err = null
-    if (test.err){
-      err = {message: test.err.message, stack: test.err.stack};
-      console.log(err.message, err.stack);
-    }
-
-    var parentSuiteId = findOrInsertParents(test);
-
-    MochaWebTests.insert({
-      title: test.title,
-      async: test.async,
-      sync: test.sync,
-      timedOut: test.timedOut,
-      pending: test.pending,
-      type: test.type,
-      duration: test.duration,
-      state: test.state,
-      speed: test.speed,
-      parentSuiteId: parentSuiteId,
-      err: err
     });
   }
 
   runner.on("start", Meteor.bindEnvironment(
     function(){
-      MochaWebTestReports.remove({});
-      MochaWebTests.remove({});
-      MochaWebSuites.remove({});
-      self.testReportId = MochaWebTestReports.insert({started: Date.now()})
+      //TODO tell testRunner that mocha tests have started
     },
     function(err){
       throw err;
@@ -159,13 +92,7 @@ function MeteorCollectionTestReporter(runner){
   });
 
   runner.on('end', Meteor.bindEnvironment(function(){
-    MochaWebTestReports.update(self.testReportId, {$set: {
-      tests: self.stats.tests,
-      passes: self.stats.passes,
-      pending: self.stats.pending,
-      failures: self.stats.failures,
-      ended: Date.now()
-    }});
+    //TODO tell testRunner all mocha web tests have finished
   }, function(err){
     throw err;
   }));
@@ -238,5 +165,54 @@ global['it'] = function (name, func){
 });
 
 Meteor.startup(function(){
-  mocha.run();
+  MeteorTestRunnerTestFiles.find({targetFramework: {$in: ["mocha-web"]}}).observeChanges({
+    added: function(id, fields){
+//      console.log("TEST FILE ADDED", fields.relativePath);
+      evalTests();
+    },
+
+    changed: function(id, fields){
+//      console.log("TEST FILE CHANGED", id, fields.relativePath);
+      evalTests();
+    },
+
+    movedBefore: function(id, before){
+//      console.log("TEST FILE MOVED BEFORE", id, fields);
+      //ignore
+    },
+
+    removed: function(id){
+      //    console.log("TEST FILE REMOVED", id);
+    }
+  });
 });
+
+var testTimeout = null;
+
+function evalTests(){
+  Meteor.call("resetReports", {framework: "mocha-web"});
+  if (testTimeout){
+    Meteor.clearTimeout(testTimeout);
+  }
+  //HACK a timeout shouldn't be necessary here
+  testTimeout = Meteor.setTimeout(function(){
+    //feel like i shouldn't have to do this..
+    Meteor.clearTimeout(testTimeout);
+    var testFiles = MeteorTestRunnerTestFiles.find({targetFramework: {$in: ["mocha-web"]}});
+    testFiles.forEach(function(testFile){
+      if (/\.js$/.exec(testFile.absolutePath)){
+        // console.log("executing test file", testFile.absolutePath)
+        var contents = readFile(testFile.absolutePath, "utf-8");
+        eval(contents);
+      }
+      else {
+//        console.log("ignoring non-javascript file", testFile.absolutePath);
+      }
+   });
+   mocha.run(function(){
+     //create a new 'mocha' so tests aren't run twice
+     mocha = new Mocha({ui: "bdd", reporter: MeteorCollectionTestReporter});
+     mocha.suite.emit("pre-require", mochaExports);
+   });
+  }, 500);
+}
