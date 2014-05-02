@@ -165,7 +165,7 @@ global['it'] = function (name, func){
 });
 
 Meteor.startup(function(){
-  MeteorTestRunnerTestFiles.find({targetFramework: {$in: ["mocha-web"]}}).observeChanges({
+  VelocityTestFiles.find({targetFramework: {$in: ["mocha-web"]}}).observeChanges({
     added: function(id, fields){
 //      console.log("TEST FILE ADDED", fields.relativePath);
       evalTests();
@@ -198,7 +198,7 @@ function evalTests(){
   testTimeout = Meteor.setTimeout(function(){
     //feel like i shouldn't have to do this..
     Meteor.clearTimeout(testTimeout);
-    var testFiles = MeteorTestRunnerTestFiles.find({targetFramework: {$in: ["mocha-web"]}});
+    var testFiles = VelocityTestFiles.find({targetFramework: {$in: ["mocha-web"]}});
     testFiles.forEach(function(testFile){
       if (/\.js$/.exec(testFile.absolutePath)){
         // console.log("executing test file", testFile.absolutePath)

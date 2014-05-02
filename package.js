@@ -12,6 +12,6 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['meteor-test-runner']);
+  api.use(['velocity']);
   api.add_files(["serverPreTest.js"], "server");
 });
