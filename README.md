@@ -16,9 +16,24 @@ describe "Leaderboard", ->
       chai.assert.equal 10, player.score
       Players.remove {name: "TestUser1"}
 ```
+
 You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
 
 Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will only exist on environments you specify. Any tests in `client` or `server` subdirectories are run exclusively on the client or server following the normal Meteor convention.
+
+One can test templates with code like this
+```javascript
+describe("should display on the episodes template", function() {
+  it("Title", function() {
+    episode = Episode.create({title: 'Episode 15 - Google Ventures'})
+    div = document.createElement("DIV");
+    comp = UI.renderWithData(Template.episode, episode);
+    UI.insert(comp, div)
+    $(div).html().should.include('Episode 15 - Google Ventures')
+    episode.destroy()
+  });
+});
+```
 
 ## Setup
 
