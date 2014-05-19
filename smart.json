@@ -5,5 +5,7 @@
   "author":"Madeye  (http://madeye.io)",
   "version":"0.2.4",
   "git": "https://github.com/mad-eye/meteor-mocha-web.git",
-  "packages":{}
+  "packages":{
+    "mirror": "0.0.2"
+  }
 }
