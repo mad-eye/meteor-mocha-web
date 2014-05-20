@@ -3,20 +3,45 @@ var Base = Npm.require("mocha/lib/reporters").Base;
 var Mocha = Npm.require("mocha");
 var Fiber = Npm.require("fibers");
 var _ = Npm.require("underscore");
+
+var ddpParentConnection = null;
 MochaWeb = {};
 
 if (!mirror.isMirror){
   mirror.start(function(err){
-    if (err)
+    if (err){
       console.log("There was an error starting the mirror");
-     else
-      console.log("Mirror started successfully");
+    }
+     else{
+       console.log("Mirror started successfully");
+     }
   });
 }
 
+mirror.startup(function(){
+  if (mirror.isMirror){
+    mirror.subscribe(function(msg){
+      parentUrl = msg;
+      ddpParentConnection = DDP.connect(parentUrl);
+      console.log("RUN ALL THE SERVER SIDE TESTS");
+      mocha.run();
+      console.log("START A PHANTOM/ZOMBIE PROCESS TO RUN THE CLIENT SIDE TESTS");
+    });
+  } else {
+    mirror.publish(process.env.ROOT_URL);
+  }
+})
+
+
+Meteor.methods({
+  "velocityIsMirror": function(){
+    return mirror.isMirror;
+  }
+})
+
 //if not a mirror don't do anything
 MochaWeb.testOnly = function(callback){
-  console.log("NO OP", mirror.isMirror);
+  // console.log("NO OP", mirror.isMirror);
 };
 
 setupMocha();
@@ -37,13 +62,6 @@ function setupMocha(){
   global.mocha = new Mocha({ui: "bdd", reporter: testReporter()});
   console.log("SETUP GLOBALS");
   setupGlobals();
-
-  Meteor.startup(function(){
-    //TODO make sure tests have been included here..
-    console.log("RUN ALL THE SERVER SIDE TESTS");
-    mocha.run()
-    console.log("START A PHANTOM/ZOMBIE PROCESS TO RUN THE CLIENT SIDE TESTS");
-  });
 }
 
 function setupGlobals(){
@@ -162,7 +180,7 @@ function testReporter(){
 
     function saveTestResult(test){
       // console.log("TEST", test)
-      Meteor.call("postResult", {
+      ddpParentConnection.call("postResult", {
         id: Meteor.uuid(),
         name: test.title,
         framework: "mocha-web",
