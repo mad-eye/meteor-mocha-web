@@ -12,6 +12,8 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['velocity']);
-  api.add_files(["serverPreTest.js"], "server");
+  api.use(['velocity', 'mirror'], "server");
+  api.add_files(["server.js"], "server");
+  api.add_files(["client.js", "mocha.js"], "client");
+  api.export("MochaWeb", ["client", "server"]);
 });
