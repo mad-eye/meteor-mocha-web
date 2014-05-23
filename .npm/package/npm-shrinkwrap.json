@@ -68,6 +68,65 @@
           }
         }
       }
+    },
+    "phantomjs": {
+      "version": "1.9.7-5",
+      "dependencies": {
+        "adm-zip": {
+          "version": "0.2.1"
+        },
+        "kew": {
+          "version": "0.1.7"
+        },
+        "ncp": {
+          "version": "0.4.2"
+        },
+        "npmconf": {
+          "version": "0.0.24",
+          "dependencies": {
+            "config-chain": {
+              "version": "1.1.8",
+              "dependencies": {
+                "proto-list": {
+                  "version": "1.2.2"
+                }
+              }
+            },
+            "inherits": {
+              "version": "1.0.0"
+            },
+            "once": {
+              "version": "1.1.1"
+            },
+            "osenv": {
+              "version": "0.0.3"
+            },
+            "nopt": {
+              "version": "2.2.1",
+              "dependencies": {
+                "abbrev": {
+                  "version": "1.0.5"
+                }
+              }
+            },
+            "semver": {
+              "version": "1.1.4"
+            },
+            "ini": {
+              "version": "1.1.0"
+            }
+          }
+        },
+        "mkdirp": {
+          "version": "0.3.5"
+        },
+        "rimraf": {
+          "version": "2.2.8"
+        },
+        "which": {
+          "version": "1.0.5"
+        }
+      }
     }
   }
 }

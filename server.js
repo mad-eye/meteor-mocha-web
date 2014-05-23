@@ -1,11 +1,18 @@
 var mirror = new Mirror("mocha-testing");
-var Base = Npm.require("mocha/lib/reporters").Base;
 var Mocha = Npm.require("mocha");
 var Fiber = Npm.require("fibers");
 var _ = Npm.require("underscore");
+var phantomjs = Npm.require("phantomjs");
+var binPath = phantomjs.path;
 
-var ddpParentConnection = null;
-MochaWeb = {};
+
+ddpParentConnection = null;
+var parentUrl = null;
+var childUrl = null;
+
+//TODO replace mirror.isMirror w/ someething that can detect being the
+//mocha-testing mirror (vs. other mirrors)
+
 
 if (!mirror.isMirror){
   mirror.start(function(err){
@@ -20,22 +27,25 @@ if (!mirror.isMirror){
 
 mirror.startup(function(){
   if (mirror.isMirror){
-    mirror.subscribe(function(msg){
-      parentUrl = msg;
+    console.log("MOCHA-WEB MIRROR LISTENING AT", process.env.ROOT_URL);
+
+    mirror.subscribe(function(parentUrl){
       ddpParentConnection = DDP.connect(parentUrl);
       console.log("RUN ALL THE SERVER SIDE TESTS");
       mocha.run();
-      console.log("START A PHANTOM/ZOMBIE PROCESS TO RUN THE CLIENT SIDE TESTS");
+      // use phantomjs to visit process.env.ROOT_URL/tests
     });
   } else {
     mirror.publish(process.env.ROOT_URL);
   }
 })
 
-
 Meteor.methods({
-  "velocityIsMirror": function(){
-    return mirror.isMirror;
+  "mirrorInfo": function(){
+    return {
+      isMirror: mirror.isMirror,
+      parentUrl: parentUrl
+    }
   }
 })
 
@@ -59,7 +69,7 @@ function setupMocha(){
 
   global.chai = Npm.require("chai");
 
-  global.mocha = new Mocha({ui: "bdd", reporter: testReporter()});
+  global.mocha = new Mocha({ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
   console.log("SETUP GLOBALS");
   setupGlobals();
 }
@@ -171,52 +181,4 @@ function setupGlobals(){
       mochaExports[testFunctionName](boundWrappedFunction);
     }
   });
-}
-
-function testReporter(){
-  function MeteorCollectionTestReporter(runner){
-    Base.call(this, runner);
-    var self = this;
-
-    function saveTestResult(test){
-      // console.log("TEST", test)
-      ddpParentConnection.call("postResult", {
-        id: Meteor.uuid(),
-        name: test.title,
-        framework: "mocha-web",
-        result: test.state
-      }, function(error, result){
-        if (error){
-          console.error("ERROR SAVING TEST", error);
-        }
-      });
-    }
-
-    runner.on("start", Meteor.bindEnvironment(
-      function(){
-        //TODO tell testRunner that mocha tests have started
-      },
-      function(err){
-        throw err;
-      }
-    ));
-
-    ["pass", "fail", "pending"].forEach(function(testEvent){
-      runner.on(testEvent, Meteor.bindEnvironment(
-        function(test){
-          saveTestResult(test);
-        },
-        function(err){
-          throw err;
-        }
-      ));
-    });
-
-    runner.on('end', Meteor.bindEnvironment(function(){
-      //TODO tell testRunner all mocha web tests have finished
-    }, function(err){
-      throw err;
-    }));
-  }
-  return MeteorCollectionTestReporter;
 }
