@@ -4,7 +4,8 @@ var Fiber = Npm.require("fibers");
 var _ = Npm.require("underscore");
 var phantomjs = Npm.require("phantomjs");
 var binPath = phantomjs.path;
-
+var childProcess = Npm.require('child_process');
+var path = Npm.require('path');
 
 ddpParentConnection = null;
 var parentUrl = null;
@@ -29,11 +30,27 @@ mirror.startup(function(){
   if (mirror.isMirror){
     console.log("MOCHA-WEB MIRROR LISTENING AT", process.env.ROOT_URL);
 
-    mirror.subscribe(function(parentUrl){
+    mirror.subscribe(function(msg){
+      parentUrl = msg;
       ddpParentConnection = DDP.connect(parentUrl);
       console.log("RUN ALL THE SERVER SIDE TESTS");
       mocha.run();
-      // use phantomjs to visit process.env.ROOT_URL/tests
+
+      //use phantomjs to run the client tests
+      //HACK FOLLOWS (there's gotta be a better way to do this)
+      //process.cwd == APP_DIR/.meteor/local/build/programs/server
+      var mochaWebDir = path.join(process.cwd(), "..", "..", "..", "..", "..", "packages", "mocha-web");
+      var phantomScript = path.join(mochaWebDir, "phantomScript.js");
+      var testUrl = process.env.ROOT_URL + "/tests";
+      childProcess.execFile(binPath, [phantomScript, testUrl], function(err, stdout, stderr){
+        if (err){
+          console.error("PHANTOM ENCOUNTERED ERROR LOADING", testUrl, err);
+        }
+        console.log(stdout);
+        if (stderr){
+          console.error("PHANTOM STDERR:", stderr);
+        }
+      });
     });
   } else {
     mirror.publish(process.env.ROOT_URL);
