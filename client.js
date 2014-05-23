@@ -1,6 +1,7 @@
 //TODO allow user to specify if things are "ready" MochaWeb.clientReady()
 
 ddpParentConnection = null;
+window.mochaWebClientTestsComplete = false;
 
 MochaWeb.testOnly = function(callback){
   //this could be cached on the client..
@@ -21,7 +22,9 @@ Meteor.call("mirrorInfo", function(error, mirrorInfo){
   if (mirrorInfo.isMirror){
     Meteor.setTimeout(function(){
       // console.log("RUN THE CLIENT TESTS");
-      mocha.run();
+      mocha.run(function(){
+        window.mochaWebClientTestsComplete = true;
+      });
     }, 0);
   }
 })
