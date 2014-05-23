@@ -11,7 +11,6 @@ page.onConsoleMessage = function(msg){
 
 page.open(system.args[1], function() {
   setTimeout(function(){
-    page.render('example.png');
     phantom.exit();    
   }, 2000);
 });
