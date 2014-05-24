@@ -41,7 +41,7 @@ function waitFor(testFx, onReady, timeOutMillis) {
 };
 
 page.onConsoleMessage = function(msg){
-  console.log("PHANTOM:", msg);
+  console.log("PHANTOM-MOCHA-WEB:", msg);
 };
 
 page.open(system.args[1], function(status) {

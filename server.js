@@ -21,7 +21,7 @@ if (!mirror.isMirror){
       console.log("There was an error starting the mirror");
     }
      else{
-       console.log("Mirror started successfully");
+       // console.log("Mirror started successfully");
      }
   });
 }
@@ -33,7 +33,7 @@ mirror.startup(function(){
     mirror.subscribe(function(msg){
       parentUrl = msg;
       ddpParentConnection = DDP.connect(parentUrl);
-      console.log("RUN ALL THE SERVER SIDE TESTS");
+      console.log("Running mocha-web server tests");
       mocha.run();
 
       //use phantomjs to run the client tests
@@ -76,11 +76,10 @@ setupMocha();
 function setupMocha(){
   if (!mirror.isMirror)
     return;
-  console.log("Enabling MochaWeb.testOnly");
+  // console.log("Enabling MochaWeb.testOnly");
   //only when mocha has been explicity enabled (in a mirror)
   //do we run the tests
   MochaWeb.testOnly = function(callback){
-    console.log("Interpret the test descriptions");
     callback();
   }
 
