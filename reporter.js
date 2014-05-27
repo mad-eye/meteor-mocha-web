@@ -10,15 +10,20 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
   var self = this;
 
   function saveTestResult(test){
-    // console.log("TEST", test)
+    if (test.state === "failed"){
+      console.log(test.err.message);
+      console.log(test.err.stack);
+    }
+
     ddpParentConnection.call("postResult", {
       id: Meteor.uuid(),
       name: test.title,
       framework: "mocha-web",
-      result: test.state
+      result: test.state,
+      err: test.err
     }, function(error, result){
       if (error){
-        console.error("ERROR SAVING TEST", error);
+        console.error("ERROR WRITING TEST", error);
       }
     });
   }
