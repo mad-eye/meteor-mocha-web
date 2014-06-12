@@ -5,7 +5,7 @@ Package.describe({
 Npm.depends({
   mocha: "1.17.1",
   chai: "1.9.0",
-  phantomjs: "1.9.7-5"
+  phantomjs: "1.9.7-8"
 });
 
 //TODO break this out into a separate package and depend weakly
