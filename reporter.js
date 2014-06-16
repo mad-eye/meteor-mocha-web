@@ -5,6 +5,18 @@ if (Meteor.isServer)
 else
   Base = Mocha.reporters.Base
 
+function getAncestors(testObject, ancestors){
+  if (!ancestors)
+    ancestors = []
+  if (testObject.parent && testObject.parent.title !== ""){
+    ancestors.push(testObject.parent.title)
+    return getAncestors(testObject.parent, ancestors);
+  }
+  else{
+    return ancestors;
+  }
+};
+
 MochaWeb.MeteorCollectionTestReporter = function(runner){
   Base.call(this, runner);
   var self = this;
@@ -15,13 +27,28 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       console.log(test.err.stack);
     }
 
-    ddpParentConnection.call("postResult", {
-      id: Meteor.uuid(),
-      name: test.title,
+    // console.log("SAVE TEST RESULT", test);
+
+    var result = {
+      id: "mocha:" + Meteor.uuid(),
+      async: test.async,
       framework: "mocha-web",
+      name: test.title,
+      pending: test.pending,
       result: test.state,
-      err: test.err
-    }, function(error, result){
+      time: test.duration,
+      timeOut: test._timeout,
+      timedOut: test.timedOut,
+      ancestors: getAncestors(test),
+      timestamp: new Date().toTimeString()
+    }
+    if (test.err){
+      result.failureMessage = test.err.message;
+      result.failureStack = test.err.stack;
+    }
+    // console.log("POSTING RESULT", result);
+
+    ddpParentConnection.call("postResult", result, function(error, result){
       if (error){
         console.error("ERROR WRITING TEST", error);
       }
