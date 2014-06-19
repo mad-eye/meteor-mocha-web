@@ -2,6 +2,9 @@ if (!process.env.NODE_ENV === "development"){
   console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
 }
 else {
+  var clientTestsComplete = false;
+  var serverTestsComplete = false;
+
   var mirror = new Mirror("mocha-testing");
   var Mocha = Npm.require("mocha");
   var Fiber = Npm.require("fibers");
@@ -38,7 +41,12 @@ else {
         parentUrl = msg;
         ddpParentConnection = DDP.connect(parentUrl);
         console.log("Running mocha-web server tests");
-        mocha.run();
+        mocha.run(function(err){
+          serverTestsComplete = true;
+          if (clientTestsComplete){
+            markTestsComplete();
+          }
+        });
 
         //use phantomjs to run the client tests
         //HACK FOLLOWS (there's gotta be a better way to do this)
@@ -61,11 +69,27 @@ else {
     }
   })
 
+  function markTestsComplete(){
+    ddpParentConnection.call("completed", {framework: "mocha-web"}, function(err){
+      if (err){
+        console.error("error calling testsComplete function", err);
+      }
+    });
+  }
+
   Meteor.methods({
     "mirrorInfo": function(){
       return {
         isMirror: mirror.isMirror,
         parentUrl: parentUrl
+      }
+    },
+
+    "clientTestsComplete": function(){
+      // console.log("CLIENT TESTS COMPLETE");
+      clientTestsComplete = true;
+      if (serverTestsComplete){
+        markTestsComplete();
       }
     }
   })

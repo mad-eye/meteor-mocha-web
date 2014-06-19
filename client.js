@@ -21,7 +21,11 @@ Meteor.startup(function(){
         });
         mocha.run(function(){
           window.mochaWebClientTestsComplete = true;
-          //TODO INVOKE CALLBACK HERE
+          Meteor.call("clientTestsComplete", function(err, result){
+            if (err){
+              console.error("ERROR INVOKING CLIENT TESTS COMPLETE", err);
+            }
+          })
         });
       }, 0);
     }
