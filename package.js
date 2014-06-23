@@ -4,8 +4,7 @@ Package.describe({
 
 Npm.depends({
   mocha: "1.17.1",
-  chai: "1.9.0",
-  phantomjs: "1.9.7-8"
+  chai: "1.9.0"
 });
 
 //TODO break this out into a separate package and depend weakly
@@ -14,8 +13,9 @@ Npm.depends({
 
 Package.on_use(function (api, where) {
   api.use(['velocity', 'mirror'], "server");
+  api.use(['templating'], "client");
   api.add_files(["reporter.js", "server.js"], "server");
-  api.add_files(["mocha.js", "reporter.js", "client.js", "chai.js"], "client");
+  api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
   api.export("MochaWeb", ["client", "server"]);
   api.export("MeteorCollectionTestReporter", ["client", "server"]);
 });

@@ -9,6 +9,8 @@ MochaWeb.testOnly = function(callback){
   testSetupFunctions.push(callback);
 };
 
+window.MirrorURLs = new Meteor.Collection("mirrorUrls");
+
 Meteor.startup(function(){
   Meteor.call("mirrorInfo", function(error, mirrorInfo){
     if (mirrorInfo.isMirror){
@@ -28,6 +30,17 @@ Meteor.startup(function(){
           })
         });
       }, 0);
+    } else {
+      Meteor.subscribe("mirrorUrls");
     }
   });
+});
+
+Template.mochaweb.helpers({
+  mochaWebIFrameURL: function(){
+    var url = MirrorURLs.findOne("mochaWeb");
+    if (!url)
+      return
+    return url.url;
+  }
 });
