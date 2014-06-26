@@ -5,7 +5,6 @@ else {
   var clientTestsComplete = false;
   var serverTestsComplete = false;
 
-  var mirror = new Mirror("mocha-testing");
   var Mocha = Npm.require("mocha");
   var Fiber = Npm.require("fibers");
   var _ = Npm.require("underscore");
@@ -16,42 +15,21 @@ else {
   var parentUrl = null;
   var childUrl = null;
 
-  //TODO replace mirror.isMirror w/ someething that can detect being the
-  //mocha-testing mirror (vs. other mirrors)
-
-
-  if (!mirror.isMirror){
-    mirror.start(function(err){
-      if (err){
-        console.log("There was an error starting the mirror");
-      }
-      else{
-        // console.log("Mirror started successfully");
-      }
-    });
-  }
-
-  mirror.startup(function(){
-    if (mirror.isMirror){
+  Meteor.startup(function(){
+    if (process.env.IS_MIRROR) {
       console.log("MOCHA-WEB MIRROR LISTENING AT", process.env.ROOT_URL);
-      mirror.subscribe(function(msg){
-        parentUrl = msg;
-        ddpParentConnection = DDP.connect(parentUrl);
-        console.log("Running mocha-web server tests");
-        mocha.run(function(err){
-          serverTestsComplete = true;
-          if (clientTestsComplete){
-            markTestsComplete();
-          }
-        });
-      });
-    } else {
-      mirror.publish(process.env.ROOT_URL);
-      Meteor.publish("mirrorUrls", function(){
-        this.added("mirrorUrls", "mochaWeb", {url: mirror.root_url});
+      parentUrl = process.env.PARENT_URL;
+      console.log("PARENT URL", process.env.PARENT_URL);
+      ddpParentConnection = DDP.connect(parentUrl);
+      console.log("Running mocha-web server tests");
+      mocha.run(function(err){
+        serverTestsComplete = true;
+        if (clientTestsComplete){
+          markTestsComplete();
+        }
       });
     }
-  })
+  });
 
   function markTestsComplete(){
     ddpParentConnection.call("completed", {framework: "mocha-web"}, function(err){
@@ -64,8 +42,8 @@ else {
   Meteor.methods({
     "mirrorInfo": function(){
       return {
-        isMirror: mirror.isMirror,
-        parentUrl: parentUrl
+        isMirror: process.env.IS_MIRROR,
+        parentUrl: process.env.PARENT_URL
       }
     },
 
@@ -86,7 +64,7 @@ else {
   setupMocha();
 
   function setupMocha(){
-    if (!mirror.isMirror)
+    if (! process.env.IS_MIRROR)
       return;
     // console.log("Enabling MochaWeb.testOnly");
     //only when mocha has been explicity enabled (in a mirror)

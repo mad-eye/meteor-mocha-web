@@ -12,7 +12,7 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['velocity', 'mirror'], "server");
+  api.use(['velocity'], "server");
   api.use(['templating'], "client");
   api.add_files(["reporter.js", "server.js"], "server");
   api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
