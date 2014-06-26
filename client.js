@@ -38,9 +38,6 @@ Meteor.startup(function(){
 
 Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
-    var url = MirrorURLs.findOne("mochaWeb");
-    if (!url)
-      return
-    return url.url;
+    return "http://localhost:5000";
   }
 });
