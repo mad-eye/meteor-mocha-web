@@ -27,7 +27,7 @@ You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http:
   "mocha-web": {
     "git": "https://github.com/mad-eye/meteor-mocha-web",
     "branch": "velocity"
-  }
+  },
   "velocity": {
     "git": "https://github.com/xolvio/velocity",
     "branch": "master"
