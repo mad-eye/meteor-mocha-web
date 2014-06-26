@@ -18,53 +18,19 @@ describe "Leaderboard", ->
 ```
 You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
 
-Tests are only included when `METEOR_MOCHA_TEST_DIRS` is defined, so they will only exist on environments you specify. Any tests in `client` or `server` subdirectories are run exclusively on the client or server following the normal Meteor convention.
-
 ## Setup
 
 1. Install Meteorite if you haven't already `npm install -g meteorite`
-2. Add the smart package to your project. `mrt add mocha-web`
-3. Add `{{> mochaTestReport}}` to the template where you'd like to see your client test results.
-4. Add `{{> serverTestReport}}` to the template where you'd like to your server test results.
-4. When running `meteor`, specify where your tests live by setting `METEOR_MOCHA_TEST_DIRS`:
-  ```
-  $ METEOR_MOCHA_TEST_DIRS="path/to/project/tests:other/path/to/tests" mrt
-  ```
-5. Whenever you add a test file or change the `METEOR_MOCHA_TEST_DIRS` environment variable, you will need to `meteor rebuild-all` to rebuild the mocha-web package and bring in the correct test files.
-6. Customize mocha options by [setting Meteor.public.mocha_setup_args](http://docs.meteor.com/#meteor_settings) (example below, this currently only works on the client-side)
-
-```javascript
+2. Add the smart package and velocity to your project in your smart.json.
+```json
 {
-  "public": {
-    "mocha_setup_args": {
-      "ui": "tdd",
-      "check-leaks": false,
-      "globals": ["script*"]
-    }
+  "mocha-web": {
+    "git": "https://github.com/mad-eye/meteor-mocha-web",
+    "branch": "velocity"
+  }
+  "velocity": {
+    "git": "https://github.com/xolvio/velocity",
+    "branch": "master"
   }
 }
 ```
-
-## Optional Setup
-
-### Assertion Libraries
-We've included the [chai](http://chaijs.com/) assertion library, but you can include other assertion libraries as
-well.  Chai is included under the `chai` variable.  If you include in your file
-
-    assert = chai.assert
-    
-you can use assert as you normally would in Node.  (We did not do this automatically so that we didn't pollute the global namespace).
-
-Note that since these tests are running client side, you don't have the normal access to `require`.
-
-
-### Setting up PhantomJS/Mocha 
-
-```bash
-  npm install -g phantomjs
-  npm install -g mocha-phantomjs
-  mocha-phantomjs http://localhost:3000
-```
-
-## Questions?
-This package is in its early stages, so please feel free to ask questions, raise issues, or submit pull requests.
