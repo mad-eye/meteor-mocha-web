@@ -44,7 +44,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     }
     if (test.err){
       result.failureMessage = test.err.message;
-      result.failureStack = test.err.stack;
+      result.failureStackTrace = test.err.stack;
     }
     // console.log("POSTING RESULT", result);
 
