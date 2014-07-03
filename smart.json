@@ -3,7 +3,7 @@
   "description":"Easily and securely use mocha within client side Meteor",
   "homepage":"https://github.com/mad-eye/meteor-mocha-web",
   "author":"Madeye  (http://madeye.io)",
-  "version":"0.3.1",
+  "version":"0.3.2",
   "git": "https://github.com/mad-eye/meteor-mocha-web.git",
   "testPackage": true,
   "regex": "-mocha-web.(js|coffee)$",
