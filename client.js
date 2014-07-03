@@ -14,6 +14,7 @@ window.MirrorURLs = new Meteor.Collection("mirrorUrls");
 Meteor.startup(function(){
   Meteor.call("mirrorInfo", function(error, mirrorInfo){
     if (mirrorInfo.isMirror){
+      Session.set("mochaWebMirror", true);
       Meteor.setTimeout(function(){
         ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
         //TODO allow ui to be customized with Meteor.settings
@@ -31,6 +32,7 @@ Meteor.startup(function(){
         });
       }, 0);
     } else {
+      Session.set("mochaWebMirror", false);
       Meteor.subscribe("mirrorUrls");
     }
   });
@@ -38,6 +40,10 @@ Meteor.startup(function(){
 
 Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
-    return "http://localhost:5000";
+    if (! Session.get("mochaWebMirror")){
+        return "http://localhost:5000";
+    } else {
+      return null;
+    }
   }
 });
