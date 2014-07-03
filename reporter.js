@@ -1,7 +1,7 @@
 MochaWeb = {};
 
 if (Meteor.isServer)
-  var Base = Npm.require("mocha/lib/reporters").Base;  
+  var Base = Npm.require("mocha/lib/reporters").Base;
 else
   Base = Mocha.reporters.Base
 
@@ -32,7 +32,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     var result = {
       id: "mocha:" + Meteor.uuid(),
       async: test.async,
-      framework: "mocha-web",
+      framework: "mocha-web-velocity",
       name: test.title,
       pending: test.pending,
       result: test.state,

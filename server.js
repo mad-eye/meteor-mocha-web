@@ -21,7 +21,7 @@ else {
       parentUrl = process.env.PARENT_URL;
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
-      console.log("Running mocha-web server tests");
+      console.log("Running mocha-web-velocity server tests");
       mocha.run(function(err){
         serverTestsComplete = true;
         if (clientTestsComplete){
@@ -32,7 +32,7 @@ else {
   });
 
   function markTestsComplete(){
-    ddpParentConnection.call("completed", {framework: "mocha-web"}, function(err){
+    ddpParentConnection.call("completed", {framework: "mocha-web-velocity"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }
