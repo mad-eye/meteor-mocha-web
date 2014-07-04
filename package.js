@@ -4,7 +4,8 @@ Package.describe({
 
 Npm.depends({
   mocha: "1.17.1",
-  chai: "1.9.0"
+  chai: "1.9.0",
+  mkdirp: "0.5.0"
 });
 
 //TODO break this out into a separate package and depend weakly

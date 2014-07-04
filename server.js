@@ -10,6 +10,7 @@ else {
   var _ = Npm.require("underscore");
   var childProcess = Npm.require('child_process');
   var path = Npm.require('path');
+  var mkdirp = Npm.require("mkdirp");
 
   ddpParentConnection = null;
   var parentUrl = null;
@@ -187,4 +188,26 @@ else {
       }
     });
   }
+  function copyTestsToMirror(file){
+    Meteor.call("resetReports", {framework: "mocha-web-velocity"}, function(){
+      var relativeDest = file.relativePath.split(path.sep).splice(1).join(path.sep);
+      var mirrorPath = path.join(process.env.PWD, ".meteor", "local", ".mirror");
+      var dest = path.join(mirrorPath, relativeDest);
+      mkdirp.sync(dest);
+      var cmd = "cp " +  file.absolutePath + " " + dest;
+      childProcess.exec(cmd, function(err){
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+  }
+
+  Meteor.startup(function(){
+    VelocityTestFiles.find({targetFramework: 'mocha-web-velocity'}).observe({
+      added: copyTestsToMirror,
+      changed: copyTestsToMirror,
+      removed: copyTestsToMirror
+    });
+  })
 }
