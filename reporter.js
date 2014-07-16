@@ -31,7 +31,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
 
     var result = {
       id: "mocha:" + Meteor.uuid(),
-      async: test.async,
+      async: !!test.async,
       framework: "mocha-web-velocity",
       name: test.title,
       pending: test.pending,
@@ -40,8 +40,8 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       timeOut: test._timeout,
       timedOut: test.timedOut,
       ancestors: getAncestors(test),
-      timestamp: new Date().toTimeString()
-    }
+      timestamp: new Date()
+    };
     if (test.err){
       result.failureMessage = test.err.message;
       result.failureStackTrace = test.err.stack;
