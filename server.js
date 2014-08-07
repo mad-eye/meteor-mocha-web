@@ -136,6 +136,8 @@ else {
     global.describe = function (name, func){
       mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
     };
+    global.describe.skip = mochaExports.describe.skip;
+    global.describe.only = mochaExports.describe.only;
 
     //In Meteor, these blocks will all be invoking Meteor code and must
     //run within a fiber. We must therefore wrap each with something like
@@ -168,6 +170,8 @@ else {
 
       mochaExports['it'](name, boundWrappedFunction);
     };
+    global.it.skip = mochaExports.it.skip;
+    global.it.only = mochaExports.it.only;
 
     ["before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
       global[testFunctionName] = function (func){

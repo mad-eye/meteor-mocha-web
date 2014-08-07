@@ -42,6 +42,9 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       ancestors: getAncestors(test),
       timestamp: new Date()
     };
+    if (typeof test.state === "undefined" && test.pending === true) {
+      result.result = "pending";
+    }
     if (test.err){
       result.failureMessage = test.err.message;
       result.failureStackTrace = test.err.stack;
