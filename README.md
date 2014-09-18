@@ -1,6 +1,8 @@
-# meteor-mocha-web
+# velocity-mocha
 
-meteor-mocha-web allows you to easily and safely run mocha tests within the Meteor framework.  This means you can write tests that use and examine Meteor collections.
+`metoer add mike:mocha`
+
+This meteor package allows you to easily and safely run [mocha](http://visionmedia.github.io/mocha/) tests *within* Meteor. It is built upon the [Velocity testing framework](https://github.com/meteor-velocity/velocity).
 
 Here's an example using CoffeeScript (or [check out the full Meteor project w/ tests](https://github.com/mad-eye/leaderboard-mocha))
 
@@ -17,35 +19,7 @@ describe "Leaderboard", ->
       Players.remove {name: "TestUser1"}
 ```
 
-You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
+You're free to write your tests in any Meteor supported extension. The [chai](http://chaijs.com/) assertion library is included within this package for your convenience.
 
-One can test templates with code like this
-```javascript
-describe("should display on the episodes template", function() {
-  it("Title", function() {
-    episode = Episode.create({title: 'Episode 15 - Google Ventures'})
-    div = document.createElement("DIV");
-    comp = UI.renderWithData(Template.episode, episode);
-    UI.insert(comp, div)
-    $(div).html().should.include('Episode 15 - Google Ventures')
-    episode.destroy()
-  });
-});
-```
+velocity-mocha relies heavily on the velocity project
 
-## Setup
-
-1. Install Meteorite if you haven't already `npm install -g meteorite`
-2. Add the smart package and velocity to your project in your smart.json.
-```json
-{
-  "mocha-web": {
-    "git": "https://github.com/mad-eye/meteor-mocha-web",
-    "branch": "velocity"
-  },
-  "velocity": {
-    "git": "https://github.com/xolvio/velocity",
-    "branch": "master"
-  }
-}
-```
