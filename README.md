@@ -16,7 +16,22 @@ describe "Leaderboard", ->
       chai.assert.equal 10, player.score
       Players.remove {name: "TestUser1"}
 ```
+
 You're free to write your tests in JavaScript or CoffeeScript.  The [chai](http://chaijs.com/) assertion library is included in this package, but you're free to use a different assertion library.
+
+One can test templates with code like this
+```javascript
+describe("should display on the episodes template", function() {
+  it("Title", function() {
+    episode = Episode.create({title: 'Episode 15 - Google Ventures'})
+    div = document.createElement("DIV");
+    comp = UI.renderWithData(Template.episode, episode);
+    UI.insert(comp, div)
+    $(div).html().should.include('Episode 15 - Google Ventures')
+    episode.destroy()
+  });
+});
+```
 
 ## Setup
 
