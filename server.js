@@ -1,7 +1,17 @@
+TEST_FRAMEWORK_NAME = "mocha";
+
+
 if (!process.env.NODE_ENV === "development"){
   console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
 }
 else {
+  if (Velocity && Velocity.registerTestingFramework){
+    console.log("REGISTERING FRAMEWORK", TEST_FRAMEWORK_NAME);
+    Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
+      regex: 'velocity/.+\\.(js|coffee|litcoffee|coffee\\.md)$'
+    });
+  }
+
   var clientTestsComplete = false;
   var serverTestsComplete = false;
 
@@ -22,7 +32,7 @@ else {
       parentUrl = process.env.PARENT_URL;
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
-      console.log("Running mocha-web-velocity server tests");
+      console.log("Running mocha server tests");
       mocha.run(function(err){
         serverTestsComplete = true;
         if (clientTestsComplete){
@@ -33,7 +43,7 @@ else {
   });
 
   function markTestsComplete(){
-    ddpParentConnection.call("completed", {framework: "mocha-web-velocity"}, function(err){
+    ddpParentConnection.call("completed", {framework: "mocha"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }
@@ -189,7 +199,7 @@ else {
     });
   }
   function copyTestsToMirror(file){
-    Meteor.call("resetReports", {framework: "mocha-web-velocity"}, function(){
+    Meteor.call("resetReports", {framework: "mocha"}, function(){
       var relativeDest = file.relativePath.split(path.sep).splice(1).join(path.sep);
       var mirrorPath = path.join(process.env.PWD, ".meteor", "local", ".mirror");
       var dest = path.join(mirrorPath, relativeDest);
@@ -204,7 +214,7 @@ else {
   }
 
   Meteor.startup(function(){
-    VelocityTestFiles.find({targetFramework: 'mocha-web-velocity'}).observe({
+    VelocityTestFiles.find({targetFramework: 'mocha'}).observe({
       added: copyTestsToMirror,
       changed: copyTestsToMirror,
       removed: copyTestsToMirror

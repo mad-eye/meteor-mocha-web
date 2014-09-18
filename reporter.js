@@ -32,7 +32,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     var result = {
       id: "mocha:" + Meteor.uuid(),
       async: !!test.async,
-      framework: "mocha-web-velocity",
+      framework: "mocha",
       name: test.title,
       pending: test.pending,
       result: test.state,

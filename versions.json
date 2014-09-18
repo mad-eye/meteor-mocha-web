@@ -5,7 +5,15 @@
       "1.0.0"
     ],
     [
+      "application-configuration",
+      "1.0.2"
+    ],
+    [
       "base64",
+      "1.0.0"
+    ],
+    [
+      "binary-heap",
       "1.0.0"
     ],
     [
@@ -13,8 +21,16 @@
       "2.0.0"
     ],
     [
+      "callback-hook",
+      "1.0.0"
+    ],
+    [
       "check",
       "1.0.0"
+    ],
+    [
+      "ddp",
+      "1.0.8"
     ],
     [
       "deps",
@@ -23,6 +39,10 @@
     [
       "ejson",
       "1.0.2"
+    ],
+    [
+      "follower-livedata",
+      "1.0.1"
     ],
     [
       "geojson-utils",
@@ -53,12 +73,20 @@
       "1.0.8"
     ],
     [
+      "logging",
+      "1.0.3"
+    ],
+    [
       "meteor",
       "1.1.0"
     ],
     [
       "minimongo",
       "1.0.3"
+    ],
+    [
+      "mongo",
+      "1.0.5"
     ],
     [
       "observe-sequence",
@@ -97,15 +125,15 @@
       "1.0.0"
     ],
     [
-      "velocity:html-reporter",
-      "0.1.5"
+      "velocity:core",
+      "0.2.0"
     ],
     [
-      "xolvio:velocity",
-      "0.1.18"
+      "velocity:html-reporter",
+      "0.2.1"
     ]
   ],
   "pluginDependencies": [],
-  "toolVersion": "meteor-tool@1.0.31",
+  "toolVersion": "meteor-tool@1.0.30",
   "format": "1.0"
 }
