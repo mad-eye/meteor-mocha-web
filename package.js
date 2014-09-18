@@ -1,5 +1,8 @@
 Package.describe({
-  summary: "Run mocha tests in the browser"
+  name: 'mike:mocha',
+  summary: "Run mocha tests in the browser",
+  version: "0.3.5",
+  git: "https://github.com/mad-eye/meteor-mocha-web"
 });
 
 Npm.depends({
@@ -13,7 +16,8 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['velocity'], "server");
+  api.use(['xolvio:velocity'], "server");
+  api.use(['velocity:html-reporter'], "client");
   api.use(['templating'], "client");
   api.add_files(["reporter.js", "server.js"], "server");
   api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
