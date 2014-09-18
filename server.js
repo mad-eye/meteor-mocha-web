@@ -1,14 +1,12 @@
 TEST_FRAMEWORK_NAME = "mocha";
 
-
 if (!process.env.NODE_ENV === "development"){
   console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
 }
 else {
   if (Velocity && Velocity.registerTestingFramework){
-    console.log("REGISTERING FRAMEWORK", TEST_FRAMEWORK_NAME);
     Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
-      regex: 'velocity/.+\\.(js|coffee|litcoffee|coffee\\.md)$'
+      regex: 'mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$'
     });
   }
 
