@@ -126,7 +126,7 @@
     ],
     [
       "velocity:core",
-      "0.2.0"
+      "0.2.14"
     ],
     [
       "velocity:html-reporter",
