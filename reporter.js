@@ -29,8 +29,9 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
 
     // console.log("SAVE TEST RESULT", test);
 
+    var ancestors = getAncestors(test);
     var result = {
-      id: "mocha:" + Meteor.uuid(),
+      id: "mocha:" + ancestors.join(":") + ":" + test.title,
       async: !!test.async,
       framework: "mocha",
       name: test.title,
@@ -39,7 +40,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       time: test.duration,
       timeOut: test._timeout,
       timedOut: test.timedOut,
-      ancestors: getAncestors(test),
+      ancestors: ancestors,
       timestamp: new Date()
     };
     if (test.err){
