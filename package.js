@@ -17,7 +17,7 @@ Npm.depends({
 
 Package.on_use(function (api, where) {
   api.use(['velocity:core@0.2.14'], "server");
-  api.use(['velocity:html-reporter@0.2.1'], "client");
+  api.use(['velocity:html-reporter@0.2.3'], "client");
   api.use(['templating@1.0.6'], "client");
 
   api.add_files(["reporter.js", "server.js"], "server");
