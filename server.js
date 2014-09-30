@@ -92,7 +92,8 @@ else {
     }
 
     global.chai = Npm.require("chai");
-
+    // enable stack trace with line numbers with assertions
+    global.chai.Assertion.includeStack = true;
     global.mocha = new Mocha({ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
     console.log("SETUP GLOBALS");
     setupGlobals();

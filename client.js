@@ -17,6 +17,8 @@ Meteor.startup(function(){
       Session.set("mochaWebMirror", true);
       Meteor.setTimeout(function(){
         ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
+        // enable stack trace with line numbers with assertions
+        chai.Assertion.includeStack = true;
         //TODO allow ui to be customized with Meteor.settings
         mocha.setup({reporter: MochaWeb.MeteorCollectionTestReporter, ui: "bdd"});
         testSetupFunctions.forEach(function(testFunction){
