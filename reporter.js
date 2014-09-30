@@ -41,6 +41,8 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       timeOut: test._timeout,
       timedOut: test.timedOut,
       ancestors: ancestors,
+      isClient: Meteor.isClient,
+      isServer: Meteor.isServer,
       timestamp: new Date()
     };
     if (test.err){
