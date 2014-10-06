@@ -13,7 +13,7 @@ window.MirrorURLs = new Meteor.Collection("mirrorUrls");
 
 Meteor.startup(function(){
   Meteor.call("mirrorInfo", function(error, mirrorInfo){
-    if (mirrorInfo.isMirror){
+    if (mirrorInfo.isMirror && /mocha=true/.test(document.location.href.split("?")[1])){
       Session.set("mochaWebMirror", true);
       Meteor.setTimeout(function(){
         ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
@@ -43,7 +43,7 @@ Meteor.startup(function(){
 Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
     if (! Session.get("mochaWebMirror")){
-        return "http://localhost:5000";
+        return "http://localhost:5000?mocha=true";
     } else {
       return null;
     }
