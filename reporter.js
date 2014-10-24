@@ -45,6 +45,9 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       isServer: Meteor.isServer,
       timestamp: new Date()
     };
+    if (typeof test.state === "undefined" && test.pending === true) {
+      result.result = "pending";
+    }
     if (test.err){
       result.failureMessage = test.err.message;
       result.failureStackTrace = test.err.stack;
