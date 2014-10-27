@@ -1,4 +1,4 @@
-MochaWeb = {};
+MochaWeb = this.MochaWeb = {};
 
 if (Meteor.isServer)
   var Base = Npm.require("mocha/lib/reporters").Base;

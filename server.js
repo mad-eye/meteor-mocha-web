@@ -24,7 +24,6 @@ else {
 
   var Mocha = Npm.require("mocha");
   var Fiber = Npm.require("fibers");
-  var _ = Npm.require("underscore");
   var childProcess = Npm.require('child_process');
   var path = Npm.require('path');
   var mkdirp = Npm.require("mkdirp");
@@ -46,6 +45,17 @@ else {
           markTestsComplete();
         }
       });
+    } else {
+      var fileCopier = new Velocity.FileCopier({
+        targetFramework: "mocha",
+        shouldCopy: function (filepath) {
+          return true;
+        },
+        convertTestPathToMirrorPath: function (filePath) {
+          return filePath;
+        }
+      })
+      fileCopier.start()
     }
   });
 
@@ -210,26 +220,5 @@ else {
       }
     });
   }
-  function copyTestsToMirror(file){
-    Meteor.call("resetReports", {framework: "mocha"}, function(){
-      var relativeDest = file.relativePath.split(path.sep).splice(1).join(path.sep);
-      var mirrorPath = path.join(process.env.PWD, ".meteor", "local", ".mirror");
-      var dest = path.join(mirrorPath, relativeDest);
-      mkdirp.sync(dest);
-      var cmd = "cp " +  file.absolutePath + " " + dest;
-      childProcess.exec(cmd, function(err){
-        if (err) {
-          console.error(err);
-        }
-      });
-    });
-  }
 
-  Meteor.startup(function(){
-    VelocityTestFiles.find({targetFramework: 'mocha'}).observe({
-      added: copyTestsToMirror,
-      changed: copyTestsToMirror,
-      removed: copyTestsToMirror
-    });
-  })
 }

@@ -1,7 +1,8 @@
 Package.describe({
   name: 'mike:mocha',
   summary: "Run mocha tests in the browser",
-  version: "0.3.12",
+  version: "0.3.14",
+  debugOnly: true,
   git: "https://github.com/mad-eye/meteor-mocha-web"
 });
 
@@ -19,6 +20,7 @@ Package.on_use(function (api, where) {
   api.use(['velocity:core@0.2.14'], "server");
   api.use(['velocity:html-reporter@0.2.3'], "client");
   api.use(['templating@1.0.6'], "client");
+  api.use(['velocity:shim'], ["client", "server"]);
 
   api.add_files(["reporter.js", "server.js"], "server");
   api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
