@@ -43,10 +43,10 @@ Meteor.startup(function(){
 
 Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
-    if (! Session.get("mochaWebMirror")){
-        return "http://localhost:5000?mocha=true";
-    } else {
-      return null;
+    var mirror = VelocityMirrors.findOne({framework: "mocha"});
+    if (mirror && mirror.rootUrl){
+      return mirror.rootUrl;
     }
+    return null;
   }
 });
