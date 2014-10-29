@@ -1,7 +1,7 @@
 Package.describe({
   name: 'mike:mocha',
   summary: "Run mocha tests in the browser",
-  version: "0.3.14",
+  version: "0.4.0",
   debugOnly: true,
   git: "https://github.com/mad-eye/meteor-mocha-web"
 });
@@ -17,8 +17,8 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['velocity:core@0.2.14'], "server");
-  api.use(['velocity:html-reporter@0.2.3'], "client");
+  api.use(['velocity:core@1.0.0-rc.1'], "server");
+  api.use(['velocity:html-reporter@0.3.0-rc.1'], "client");
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.0.1'], ["client", "server"]);
 

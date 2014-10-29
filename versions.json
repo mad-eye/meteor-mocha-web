@@ -18,7 +18,7 @@
     ],
     [
       "blaze",
-      "2.0.2"
+      "2.0.3"
     ],
     [
       "callback-hook",
@@ -30,7 +30,7 @@
     ],
     [
       "ddp",
-      "1.0.10"
+      "1.0.11"
     ],
     [
       "deps",
@@ -54,7 +54,7 @@
     ],
     [
       "http",
-      "1.0.7"
+      "1.0.8"
     ],
     [
       "id-map",
@@ -70,23 +70,23 @@
     ],
     [
       "less",
-      "1.0.10"
+      "1.0.11"
     ],
     [
       "logging",
-      "1.0.4"
+      "1.0.5"
     ],
     [
       "meteor",
-      "1.1.2"
+      "1.1.3"
     ],
     [
       "minimongo",
-      "1.0.4"
+      "1.0.5"
     ],
     [
       "mongo",
-      "1.0.7"
+      "1.0.8"
     ],
     [
       "observe-sequence",
@@ -110,7 +110,7 @@
     ],
     [
       "templating",
-      "1.0.8"
+      "1.0.9"
     ],
     [
       "tracker",
@@ -122,15 +122,15 @@
     ],
     [
       "url",
-      "1.0.1"
+      "1.0.2"
     ],
     [
       "velocity:core",
-      "0.2.14"
+      "1.0.0-rc.1"
     ],
     [
       "velocity:html-reporter",
-      "0.2.3"
+      "0.3.0-rc.1"
     ],
     [
       "velocity:shim",
@@ -138,6 +138,6 @@
     ]
   ],
   "pluginDependencies": [],
-  "toolVersion": "meteor-tool@1.0.34",
+  "toolVersion": "meteor-tool@1.0.35",
   "format": "1.0"
 }

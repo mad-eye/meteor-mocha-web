@@ -39,28 +39,39 @@ else {
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
       console.log("Running mocha server tests");
-      mocha.run(function(err){
-        serverTestsComplete = true;
-        if (clientTestsComplete){
-          markTestsComplete();
-        }
+      Meteor.call("velocity/reports/reset", function(err, result){
+        mocha.run(function(err){
+          serverTestsComplete = true;
+          if (clientTestsComplete){
+            markTestsComplete();
+          }
+        });
       });
     } else {
-      var fileCopier = new Velocity.FileCopier({
-        targetFramework: "mocha",
-        shouldCopy: function (filepath) {
-          return true;
-        },
-        convertTestPathToMirrorPath: function (filePath) {
-          return filePath;
+      Meteor.call("velocity/mirrors/request", {
+        framework: 'mocha',
+        rootUrlPath: "?mocha=true"
+      }, function(err, msg){
+        if (err){
+          console.log("error requesting mirror", err);
+        } else {
+          var fileCopier = new Velocity.FileCopier({
+            targetFramework: "mocha",
+            shouldCopy: function (filepath) {
+              return true;
+            },
+            convertTestPathToMirrorPath: function (filePath) {
+              return filePath;
+            }
+          })
+          fileCopier.start();
         }
-      })
-      fileCopier.start()
+      });
     }
   });
 
   function markTestsComplete(){
-    ddpParentConnection.call("completed", {framework: "mocha"}, function(err){
+    ddpParentConnection.call("velocity/reports/completed", {framework: "mocha"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }

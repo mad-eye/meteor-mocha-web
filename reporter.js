@@ -54,7 +54,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     }
     // console.log("POSTING RESULT", result);
 
-    ddpParentConnection.call("postResult", result, function(error, result){
+    ddpParentConnection.call("velocity/reports/submit", result, function(error, result){
       if (error){
         console.error("ERROR WRITING TEST", error);
       }
