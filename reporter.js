@@ -37,7 +37,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       name: test.title,
       pending: test.pending,
       result: test.state,
-      time: test.duration,
+      duration: test.duration,
       timeOut: test._timeout,
       timedOut: test.timedOut,
       ancestors: ancestors,
