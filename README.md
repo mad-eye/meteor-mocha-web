@@ -14,10 +14,14 @@ MochaWeb?.testOnly ->
         #create a player
         playerId = Players.insert {name: "TestUser1", score: 5}
         Session.set "selectedPlayer", playerId
-        $('button.inc').click()
-        player = Players.findOne(playerId)
-        chai.assert.equal 10, player.score
-        Players.remove playerId
+        # wait 100ms for button to appear, then continue
+        setTimeout (->
+          $('button.inc').click()
+          player = Players.findOne(playerId)
+          chai.assert.equal 10, player.score
+          Players.remove playerId
+          done()
+        ), 100
 ```
 
 The above test will work with the `leaderboard` example shipped with Meteor 1.0.
