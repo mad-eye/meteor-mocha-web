@@ -18,17 +18,6 @@ if (Velocity && Velocity.registerTestingFramework){
   var parentUrl = null;
   var childUrl = null;
 
-  Meteor.startup(function(){
-    Meteor.call("velocity/reports/reset", function(err, result){
-      mocha.run(function(err){
-        serverTestsComplete = true;
-        if (clientTestsComplete){
-          markTestsComplete();
-        }
-      });
-    });
-  });
-
   function markTestsComplete(){
     ddpParentConnection.call("velocity/reports/completed", {framework: "mocha"}, function(err){
       if (err){
@@ -46,13 +35,12 @@ if (Velocity && Velocity.registerTestingFramework){
     },
 
     "clientTestsComplete": function(){
-      // console.log("CLIENT TESTS COMPLETE");
-      clientTestsComplete = true;
-      if (serverTestsComplete){
-        markTestsComplete();
-      }
+      // console.log("client tests complete, now running server tests");
+      mocha.run(function(err, result){
+        // console.log("server tests complete", err, result);
+      });
     }
-  })
+  });
 
 
   setupMocha();

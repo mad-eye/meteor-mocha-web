@@ -24,4 +24,11 @@ Meteor.startup(function(){
   Meteor.setTimeout(function(){
     subscribeToReports();
   }, 1000);
+
+  Meteor.call("velocity/reports/reset", function(err, result){
+    mocha.run(function(){
+      Meteor.call("clientTestsComplete", function(err, result){
+      });
+    });
+  });
 });
