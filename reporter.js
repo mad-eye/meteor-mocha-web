@@ -30,14 +30,21 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     // console.log("SAVE TEST RESULT", test);
 
     var ancestors = getAncestors(test);
+    var suffix = null;
+    if (Meteor.isClient)
+      suffix = "_client";
+    if (Meteor.isServer)
+      suffix = "_server";
+    var id = "mocha:" + ancestors.join(":") + ":" + test.title + suffix;
+
     var result = {
-      id: "mocha:" + ancestors.join(":") + ":" + test.title,
+      id: id,
       async: !!test.async,
       framework: "mocha",
       name: test.title,
       pending: test.pending,
       result: test.state,
-      duration: test.duration,
+      duration: test.duration || 0,
       timeOut: test._timeout,
       timedOut: test.timedOut,
       ancestors: ancestors,
@@ -45,6 +52,7 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
       isServer: Meteor.isServer,
       timestamp: new Date()
     };
+
     if (typeof test.state === "undefined" && test.pending === true) {
       result.result = "pending";
     }

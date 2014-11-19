@@ -1,9 +1,10 @@
 //TODO allow user to specify if things are "ready" MochaWeb.clientReady()
 
 mocha.setup({reporter: MochaWeb.MeteorCollectionTestReporter, ui: "bdd"});
+chai.Assertion.includeStack = true;
 
 var subscribeToReports = function(){
-  window.a1 = Meteor.subscribe("VelocityTestReports");
+  Meteor.subscribe("VelocityTestReports");
   Meteor.subscribe('VelocityTestFiles');
   Meteor.subscribe('VelocityFixtureFiles');
   Meteor.subscribe('VelocityTestReports');
@@ -23,14 +24,4 @@ Meteor.startup(function(){
   Meteor.setTimeout(function(){
     subscribeToReports();
   }, 1000);
-});
-
-Template.mochaweb.helpers({
-  mochaWebIFrameURL: function(){
-    var mirror = VelocityMirrors.findOne({framework: "mocha"});
-    if (mirror && mirror.rootUrl){
-      return mirror.rootUrl;
-    }
-    return null;
-  }
 });

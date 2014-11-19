@@ -24,7 +24,7 @@ Package.on_use(function (api, where) {
   api.use(['velocity:shim@0.0.1'], ["client", "server"]);
 
   api.add_files(["reporter.js", "server.js"], "server");
-  api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
+  api.add_files(["client.html", "mocha.js", "reporter.js", "chai.js", "client.js"], "client");
 
   api.add_files(["sample-tests/client.js","sample-tests/server.js"], "server", {isAsset: true});
 

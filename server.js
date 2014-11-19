@@ -54,21 +54,10 @@ if (Velocity && Velocity.registerTestingFramework){
     }
   })
 
-  //if not a mirror don't do anything
-  MochaWeb.testOnly = function(callback){
-    // console.log("NO OP", mirror.isMirror);
-  };
 
   setupMocha();
 
   function setupMocha(){
-    // console.log("Enabling MochaWeb.testOnly");
-    //only when mocha has been explicity enabled (in a mirror)
-    //do we run the tests
-    MochaWeb.testOnly = function(callback){
-      callback();
-    }
-
     global.chai = Npm.require("chai");
     // enable stack trace with line numbers with assertions
     global.chai.Assertion.includeStack = true;
