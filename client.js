@@ -1,44 +1,28 @@
 //TODO allow user to specify if things are "ready" MochaWeb.clientReady()
 
-ddpParentConnection = null;
+mocha.setup({reporter: MochaWeb.MeteorCollectionTestReporter, ui: "bdd"});
+
+var subscribeToReports = function(){
+  window.a1 = Meteor.subscribe("VelocityTestReports");
+  Meteor.subscribe('VelocityTestFiles');
+  Meteor.subscribe('VelocityFixtureFiles');
+  Meteor.subscribe('VelocityTestReports');
+  Meteor.subscribe('VelocityAggregateReports');
+  Meteor.subscribe('VelocityLogs');
+  Meteor.subscribe('VelocityMirrors');
+};
+
 window.mochaWebClientTestsComplete = false;
 
 var testSetupFunctions = []
 
-MochaWeb.testOnly = function(callback){
-  testSetupFunctions.push(callback);
-};
-
 window.MirrorURLs = new Meteor.Collection("mirrorUrls");
 
 Meteor.startup(function(){
-  //TODO this method should probably live in the Velocity namespace velocity/mirrorInfo?
-  Meteor.call("mirrorInfo", function(error, mirrorInfo){
-    if (mirrorInfo.isMirror && /mocha=true/.test(document.location.href.split("?")[1])){
-      Session.set("mochaWebMirror", true);
-      Meteor.setTimeout(function(){
-        ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
-        // enable stack trace with line numbers with assertions
-        chai.Assertion.includeStack = true;
-        //TODO allow ui to be customized with Meteor.settings
-        mocha.setup({reporter: MochaWeb.MeteorCollectionTestReporter, ui: "bdd"});
-        testSetupFunctions.forEach(function(testFunction){
-          testFunction();
-        });
-        mocha.run(function(){
-          window.mochaWebClientTestsComplete = true;
-          Meteor.call("clientTestsComplete", function(err, result){
-            if (err){
-              console.error("ERROR INVOKING CLIENT TESTS COMPLETE", err);
-            }
-          })
-        });
-      }, 0);
-    } else {
-      Session.set("mochaWebMirror", false);
-      Meteor.subscribe("mirrorUrls");
-    }
-  });
+  //try and figure out why this timeout is necessary; remove if possible
+  Meteor.setTimeout(function(){
+    subscribeToReports();
+  }, 1000);
 });
 
 Template.mochaweb.helpers({

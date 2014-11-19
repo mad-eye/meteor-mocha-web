@@ -1,23 +1,9 @@
 TEST_FRAMEWORK_NAME = "mocha";
 
-if (!process.env.NODE_ENV === "development"){
-  console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
-}
-else {
-  if (Velocity && Velocity.registerTestingFramework){
-    Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
-      regex: 'mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$',
-      sampleTestGenerator: function(){
-        return [
-          { path: "mocha/client/sampleClientTest.js",
-            contents: Assets.getText("sample-tests/client.js")
-          },
-          { path: "mocha/server/sampleServerTest.js",
-            contents: Assets.getText("sample-tests/server.js")}
-        ];
-      }
-    });
-  }
+if (Velocity && Velocity.registerTestingFramework){
+  Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
+    regex: 'mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$',
+  });
 
   var clientTestsComplete = false;
   var serverTestsComplete = false;
@@ -33,41 +19,14 @@ else {
   var childUrl = null;
 
   Meteor.startup(function(){
-    if (process.env.IS_MIRROR) {
-      console.log("MOCHA-WEB MIRROR LISTENING AT", process.env.ROOT_URL);
-      parentUrl = process.env.PARENT_URL;
-      console.log("PARENT URL", process.env.PARENT_URL);
-      ddpParentConnection = DDP.connect(parentUrl);
-      console.log("Running mocha server tests");
-      Meteor.call("velocity/reports/reset", function(err, result){
-        mocha.run(function(err){
-          serverTestsComplete = true;
-          if (clientTestsComplete){
-            markTestsComplete();
-          }
-        });
-      });
-    } else {
-      Meteor.call("velocity/mirrors/request", {
-        framework: 'mocha',
-        rootUrlPath: "?mocha=true"
-      }, function(err, msg){
-        if (err){
-          console.log("error requesting mirror", err);
-        } else {
-          var fileCopier = new Velocity.FileCopier({
-            targetFramework: "mocha",
-            shouldCopy: function (filepath) {
-              return true;
-            },
-            convertTestPathToMirrorPath: function (filePath) {
-              return filePath;
-            }
-          })
-          fileCopier.start();
+    Meteor.call("velocity/reports/reset", function(err, result){
+      mocha.run(function(err){
+        serverTestsComplete = true;
+        if (clientTestsComplete){
+          markTestsComplete();
         }
       });
-    }
+    });
   });
 
   function markTestsComplete(){
@@ -103,8 +62,6 @@ else {
   setupMocha();
 
   function setupMocha(){
-    if (! process.env.IS_MIRROR)
-      return;
     // console.log("Enabling MochaWeb.testOnly");
     //only when mocha has been explicity enabled (in a mirror)
     //do we run the tests
@@ -116,7 +73,6 @@ else {
     // enable stack trace with line numbers with assertions
     global.chai.Assertion.includeStack = true;
     global.mocha = new Mocha({ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
-    console.log("SETUP GLOBALS");
     setupGlobals();
   }
 

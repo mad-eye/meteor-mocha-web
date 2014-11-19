@@ -17,6 +17,7 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
+  api.use(['underscore'], ['server', 'client']);
   api.use(['velocity:core@1.0.0-rc.1'], "server");
   api.use(['velocity:html-reporter@0.3.0-rc.3'], "client");
   api.use(['templating@1.0.6'], "client");
@@ -29,4 +30,9 @@ Package.on_use(function (api, where) {
 
   api.export("MochaWeb", ["client", "server"]);
   api.export("MeteorCollectionTestReporter", ["client", "server"]);
+});
+
+Package.on_test(function(api, where){
+  api.export("describe", ["client", "server"]);
+  api.export("it", ["client", "server"]);
 });
