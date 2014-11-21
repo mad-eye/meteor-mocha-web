@@ -1,7 +1,7 @@
 Package.describe({
-  name: 'mike:mocha',
+  name: 'mike:mocha-package',
   summary: "Run mocha tests in the browser",
-  version: "0.4.4",
+  version: "0.4.5",
   debugOnly: true,
   git: "https://github.com/mad-eye/meteor-mocha-web"
 });
