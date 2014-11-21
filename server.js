@@ -19,7 +19,9 @@ if (Velocity && Velocity.registerTestingFramework){
   var childUrl = null;
 
   function markTestsComplete(){
-    ddpParentConnection.call("velocity/reports/completed", {framework: "mocha"}, function(err){
+    //TODO use this function, ran into some issues w/ fibers when i
+    //first tried
+    Meteor.call("velocity/reports/completed", {framework: "mocha"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }
@@ -36,8 +38,9 @@ if (Velocity && Velocity.registerTestingFramework){
 
     "clientTestsComplete": function(){
       // console.log("client tests complete, now running server tests");
-      mocha.run(function(err, result){
-        // console.log("server tests complete", err, result);
+       mocha.run(function(err, result){
+         // console.log("server tests complete", err, result);
+         // markTestsComplete()
       });
     }
   });
@@ -165,4 +168,10 @@ if (Velocity && Velocity.registerTestingFramework){
     });
   }
 
+  //add Metoer-specfiic describe.client, describe.server etc.
+  describe.client = function(){};
+  it.client = function(){};
+
+  describe.server = describe;
+  describe.it = it;
 }

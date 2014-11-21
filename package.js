@@ -19,7 +19,7 @@ Npm.depends({
 Package.on_use(function (api, where) {
   api.use(['underscore'], ['server', 'client']);
   api.use(['velocity:core@1.0.0-rc.1'], "server");
-  api.use(['velocity:html-reporter@0.3.0-rc.3'], "client");
+  api.use(['mike:html-reporter@0.3.1'], "client");
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.0.1'], ["client", "server"]);
 

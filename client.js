@@ -27,8 +27,14 @@ Meteor.startup(function(){
 
   Meteor.call("velocity/reports/reset", function(err, result){
     mocha.run(function(){
-      Meteor.call("clientTestsComplete", function(err, result){
-      });
+      Meteor.call("clientTestsComplete", function(err, result){});
     });
   });
 });
+
+//allow describe and it blocks to be run only on server/client
+describe.client = describe;
+it.client = it;
+
+describe.server = function(){};
+it.server = function(){};
