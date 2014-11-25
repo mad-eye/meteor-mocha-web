@@ -54,17 +54,6 @@ else {
       }, function(err, msg){
         if (err){
           console.log("error requesting mirror", err);
-        } else {
-          var fileCopier = new Velocity.FileCopier({
-            targetFramework: "mocha",
-            shouldCopy: function (filepath) {
-              return true;
-            },
-            convertTestPathToMirrorPath: function (filePath) {
-              return filePath;
-            }
-          })
-          fileCopier.start();
         }
       });
     }

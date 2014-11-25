@@ -53,10 +53,6 @@
       "1.0.2"
     ],
     [
-      "http",
-      "1.0.8"
-    ],
-    [
       "id-map",
       "1.0.1"
     ],
@@ -121,20 +117,24 @@
       "1.0.1"
     ],
     [
-      "url",
-      "1.0.2"
-    ],
-    [
       "velocity:core",
-      "0.3.0"
+      "0.4.1"
     ],
     [
       "velocity:html-reporter",
       "0.3.1"
     ],
     [
+      "velocity:node-soft-mirror",
+      "0.0.8"
+    ],
+    [
       "velocity:shim",
-      "0.0.1"
+      "0.0.3"
+    ],
+    [
+      "velocity:test-proxy",
+      "0.0.4"
     ]
   ],
   "pluginDependencies": [],
