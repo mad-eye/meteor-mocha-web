@@ -125,16 +125,8 @@
       "0.3.1"
     ],
     [
-      "velocity:node-soft-mirror",
-      "0.0.8"
-    ],
-    [
       "velocity:shim",
       "0.0.3"
-    ],
-    [
-      "velocity:test-proxy",
-      "0.0.4"
     ]
   ],
   "pluginDependencies": [],
