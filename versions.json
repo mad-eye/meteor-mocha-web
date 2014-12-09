@@ -29,10 +29,6 @@
       "1.0.2"
     ],
     [
-      "coffeescript",
-      "1.0.4"
-    ],
-    [
       "ddp",
       "1.0.11"
     ],
@@ -129,16 +125,8 @@
       "0.3.1"
     ],
     [
-      "velocity:node-soft-mirror",
-      "0.1.0"
-    ],
-    [
       "velocity:shim",
       "0.1.0"
-    ],
-    [
-      "velocity:test-proxy",
-      "0.0.4"
     ]
   ],
   "pluginDependencies": [],
