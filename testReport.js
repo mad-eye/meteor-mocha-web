@@ -2,9 +2,9 @@ var MochaWebTests = null
 var MochaWebTestReports = null
 
 Meteor.startup(function(){
-  MochaWebTests = new Meteor.Collection("mochaWebTests");
-  MochaWebTestReports = new Meteor.Collection("mochaWebTestReports");
-  MochaWebSuites = new Meteor.Collection("mochaWebSuites");
+  MochaWebTests = new Mongo.Collection("mochaWebTests");
+  MochaWebTestReports = new Mongo.Collection("mochaWebTestReports");
+  MochaWebSuites = new Mongo.Collection("mochaWebSuites");
 
   Meteor.subscribe("mochaServerSideTests", {includeAll: true});
   Meteor.subscribe("mochaServerSideTestReports");

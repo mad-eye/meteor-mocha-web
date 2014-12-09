@@ -9,7 +9,7 @@ MochaWeb.testOnly = function(callback){
   testSetupFunctions.push(callback);
 };
 
-window.MirrorURLs = new Meteor.Collection("mirrorUrls");
+window.MirrorURLs = new Mongo.Collection("mirrorUrls");
 
 Meteor.startup(function(){
   //TODO this method should probably live in the Velocity namespace velocity/mirrorInfo?
