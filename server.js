@@ -40,12 +40,12 @@ else {
       ddpParentConnection = DDP.connect(parentUrl);
       console.log("Running mocha server tests");
       Meteor.call("velocity/reports/reset", function(err, result){
-        mocha.run(function(err){
+        mocha.run(Meteor.bindEnvironment(function(err){
           serverTestsComplete = true;
           if (clientTestsComplete){
             markTestsComplete();
           }
-        });
+        }));
       });
     } else {
       //HACK need to make sure after the proxy package adds the test files
