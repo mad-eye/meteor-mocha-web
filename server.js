@@ -175,3 +175,22 @@ if (Velocity && Velocity.registerTestingFramework){
   describe.server = describe;
   describe.it = it;
 }
+
+var addAggregateMetadata = function(data){
+  VelocityAggregateReports.upsert({name: "mochaMetadata"}, {$set: data});
+}
+
+Meteor.methods({
+  'mochaResetAll': function(){
+    Meteor.call("velocity/reports/reset", function(err){
+      updateCounts();
+      if (err){
+        console.error("error calling testsComplete function", err);
+      }
+    });
+  },
+
+  addAggregateMetadata: function(data){
+    addAggregateMetadata(data);
+  },
+});
