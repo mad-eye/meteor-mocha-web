@@ -38,13 +38,12 @@ if (Velocity && Velocity.registerTestingFramework){
 
     "clientTestsComplete": function(){
       // console.log("client tests complete, now running server tests");
-       mocha.run(function(err, result){
+       mocha.run(Meteor.bindEnvironment(function(err, result){
          // console.log("server tests complete", err, result);
-         // markTestsComplete()
-      });
+         markTestsComplete()
+      }));
     }
   });
-
 
   setupMocha();
 
@@ -182,7 +181,7 @@ var addAggregateMetadata = function(data){
 
 Meteor.methods({
   'mochaResetAll': function(){
-    Meteor.call("velocity/reports/reset", function(err){
+    Meteor.call("velocity/reset", function(err){
       updateCounts();
       if (err){
         console.error("error calling testsComplete function", err);
