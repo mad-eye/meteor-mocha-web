@@ -103,8 +103,8 @@ if (Velocity && Velocity.registerTestingFramework){
 
 
     var mochaExports = {};
-    mocha.suite.emit("pre-require", mochaExports);
     //console.log(mochaExports);
+    mocha.suite.emit("pre-require", mochaExports, null, mocha);
 
     //patch up describe function so it plays nice w/ fibers
     global.describe = function (name, func){
