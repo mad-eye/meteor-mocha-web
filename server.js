@@ -30,7 +30,6 @@ else {
 
   ddpParentConnection = null;
   var parentUrl = null;
-  var childUrl = null;
 
   Meteor.startup(function(){
     if (process.env.IS_MIRROR) {
@@ -39,7 +38,7 @@ else {
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
       console.log("Running mocha server tests");
-      Meteor.call("velocity/reports/reset", function(err, result){
+      ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
         mocha.run(Meteor.bindEnvironment(function(err){
           serverTestsComplete = true;
           if (clientTestsComplete){
