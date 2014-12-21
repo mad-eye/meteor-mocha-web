@@ -1,3 +1,7 @@
+//insert a fake mirror into the db
+//this is necssary for CI to work correctly
+//it will not cause a mirror process to be started
+VelocityMirrors.upsert({name: "fakeMochaPackageMirror"}, {rootUrl: process.env.ROOT_URL})
 TEST_FRAMEWORK_NAME = "mocha";
 
 if (Velocity && Velocity.registerTestingFramework){
