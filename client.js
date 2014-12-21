@@ -43,7 +43,7 @@ Meteor.startup(function(){
 
 Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
-    var mirror = VelocityMirrors.findOne({mirrorId: "mocha", state: "ready"});
+    var mirror = VelocityMirrors.findOne({framework: "mocha", state: "ready"});
     if (mirror && mirror.rootUrl){
       return mirror.rootUrl + "&lastModified=" + mirror.lastModified;
     }

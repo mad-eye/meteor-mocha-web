@@ -61,7 +61,6 @@ else {
       //HACK need to make sure after the proxy package adds the test files
       Meteor.setTimeout(function(){
         Meteor.call("velocity/mirrors/request", {
-          mirrorId: 'mocha',
           framework: 'mocha',
           rootUrlPath: "?mocha=true"
         }, function(err, msg){
