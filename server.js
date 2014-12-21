@@ -37,15 +37,26 @@ else {
       parentUrl = process.env.PARENT_URL;
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
-      console.log("Running mocha server tests");
-      ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
-        mocha.run(Meteor.bindEnvironment(function(err){
-          serverTestsComplete = true;
-          if (clientTestsComplete){
-            markTestsComplete();
-          }
-        }));
+
+      var runServerTests = _.debounce(Meteor.bindEnvironment(function() {
+        console.log("Running mocha server tests");
+        ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
+          mocha.run(Meteor.bindEnvironment(function(err){
+            serverTestsComplete = true;
+            if (clientTestsComplete){
+              markTestsComplete();
+            }
+          }));
+        });
+      }));
+
+      VelocityMirrors = new Meteor.Collection('velocityMirrors', {connection: ddpParentConnection});
+      ddpParentConnection.subscribe('VelocityMirrors');
+      VelocityMirrors.find({framework: "mocha", state: "ready"}).observe({
+        added: runServerTests,
+        changed: runServerTests
       });
+
     } else {
       //HACK need to make sure after the proxy package adds the test files
       Meteor.setTimeout(function(){
