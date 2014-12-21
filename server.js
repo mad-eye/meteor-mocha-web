@@ -161,7 +161,7 @@ else {
 
 
     var mochaExports = {};
-    mocha.suite.emit("pre-require", mochaExports);
+    mocha.suite.emit("pre-require", mochaExports, undefined, mocha);
     //console.log(mochaExports);
 
     //patch up describe function so it plays nice w/ fibers
@@ -169,7 +169,9 @@ else {
       mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
     };
     global.describe.skip = mochaExports.describe.skip;
-    global.describe.only = mochaExports.describe.only;
+    global.describe.only = function(name, func) {
+      mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){ throw err; }));
+    };
 
     //In Meteor, these blocks will all be invoking Meteor code and must
     //run within a fiber. We must therefore wrap each with something like
@@ -203,7 +205,9 @@ else {
       mochaExports['it'](name, boundWrappedFunction);
     };
     global.it.skip = mochaExports.it.skip;
-    global.it.only = mochaExports.it.only;
+    global.it.only = function(name, func) {
+      mochaExports.it.only(name, Meteor.bindEnvironment(func, function(err){ throw err; }));
+    };
 
     ["before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
       global[testFunctionName] = function (func){
