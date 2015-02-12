@@ -1,20 +1,38 @@
+getAncestors = function(testObject, ancestors){
+  if (!ancestors)
+    ancestors = []
+  if (testObject.parent && testObject.parent.title !== ""){
+    ancestors.push(testObject.parent.title)
+    return getAncestors(testObject.parent, ancestors);
+  }
+  else{
+    return ancestors;
+  }
+};
+
 //after all the tests have had a chance to load
 updateCounts = function(){
-  var count = 0;
-  countTests = function(suite){
+  var flattenedTests = [];
+  flattenTests = function(suite){
     if (suite.tests){
-      count = count + suite.tests.length;
+      suite.tests.forEach(function(test){
+        var ancestors = getAncestors(test, []);
+        // would it make more sense to pass objects?
+        // flattenedTests.push({ancestors: ancestors, title: test.title, isClient: Meteor.isClient})
+        if (!mocha.options.grep || mocha.options.grep.test(test.fullTitle()))
+          flattenedTests.push("mocha:" + ancestors.join(":") + ":" + test.title)
+      });
     }
     suite.suites.forEach(function(suite){
-      countTests(suite);
+      flattenTests(suite);
     });
   }
-  countTests(mocha.suite);
+  flattenTests(mocha.suite);
   if (Meteor.isServer){
-    Meteor.call("addAggregateMetadata", {serverTestCount: count});
+    Meteor.call("addAggregateMetadata", {serverTests: flattenedTests, start: Date.now()});
   }
 
   if (Meteor.isClient){
-    Meteor.call("addAggregateMetadata", {clientTestCount: count});
+    Meteor.call("addAggregateMetadata", {clientTests: flattenedTests});
   }
 }

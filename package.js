@@ -1,7 +1,7 @@
 Package.describe({
   name: 'mike:mocha-package',
   summary: "Run mocha tests in the browser",
-  version: "0.5.3",
+  version: "0.5.4",
   debugOnly: true,
   git: "https://github.com/mad-eye/meteor-mocha-web"
 });
@@ -18,7 +18,7 @@ Npm.depends({
 
 Package.on_use(function (api, where) {
   api.use(['underscore@1.0.1'], ['server', 'client']);
-  api.use(['velocity:core@0.4.2'], "server");
+  api.use(['velocity:core@0.4.5'], "server");
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.0.1'], ["client", "server"]);
 

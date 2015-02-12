@@ -5,18 +5,6 @@ if (Meteor.isServer)
 else
   Base = Mocha.reporters.Base
 
-function getAncestors(testObject, ancestors){
-  if (!ancestors)
-    ancestors = []
-  if (testObject.parent && testObject.parent.title !== ""){
-    ancestors.push(testObject.parent.title)
-    return getAncestors(testObject.parent, ancestors);
-  }
-  else{
-    return ancestors;
-  }
-};
-
 MochaWeb.MeteorCollectionTestReporter = function(runner){
   Base.call(this, runner);
   var self = this;
@@ -36,9 +24,11 @@ MochaWeb.MeteorCollectionTestReporter = function(runner){
     if (Meteor.isServer)
       suffix = "_server";
     var id = "mocha:" + ancestors.join(":") + ":" + test.title + suffix;
+    var fullName = "mocha:" + ancestors.join(":") + ":" + test.title;
 
     var result = {
       id: id,
+      fullName: fullName,
       async: !!test.async,
       framework: "mocha",
       name: test.title,
