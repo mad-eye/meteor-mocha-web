@@ -24,6 +24,8 @@ MochaWeb?.testOnly ->
         ), 100
 ```
 
+## Setting Up
+
 The above test will work with the `leaderboard` example shipped with Meteor 1.0.
 
 1. Create the app with `meteor create --example leaderboard`
