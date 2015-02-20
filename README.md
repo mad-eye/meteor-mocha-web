@@ -39,3 +39,10 @@ The above test will work with the `leaderboard` example shipped with Meteor 1.0.
 You're free to write your tests in any Meteor supported extension. The [chai](http://chaijs.com/) assertion library is included within this package for your convenience.
 
 (requires Meteor 0.9+)
+
+## Testing a local installation of mocha
+
+1. Clone this repository somewhere `git clone https://github.com/mad-eye/meteor-mocha-web`
+2. Create a packages directory in the root of your app if it doesn't already exist `cd YOUR_APP && mkdir packages`
+3. Create a symlink to the repository you cloned `cd YOUR_APP/packages && ln -s /PATH/TO/meteor-mocha-web mike:mocha`
+4. Run your app
