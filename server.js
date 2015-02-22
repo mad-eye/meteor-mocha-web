@@ -6,7 +6,7 @@ if (!process.env.NODE_ENV === "development"){
 else {
   if (Velocity && Velocity.registerTestingFramework){
     Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
-      regex: '^tests/mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$',
+      regex: '^tests/mocha/.*$',
       sampleTestGenerator: function(){
         return [
           { path: "mocha/client/sampleClientTest.js",
