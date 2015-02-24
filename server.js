@@ -148,8 +148,26 @@ if (Velocity && Velocity.registerTestingFramework){
 
       mochaExports['it'](name, boundWrappedFunction);
     };
+
+    global['it'].only = function (name, func){
+      wrappedFunc = function(callback){
+        if (func.length == 0){
+          func();
+          callback();
+        }
+        else {
+          func(callback);
+        }
+      }
+
+      boundWrappedFunction = moddedBindEnvironment(wrappedFunc, function(err){
+        throw err;
+      });
+
+      mochaExports['it'].only(name, boundWrappedFunction);
+    };
+
     global.it.skip = mochaExports.it.skip;
-    global.it.only = mochaExports.it.only;
 
     ["before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
       global[testFunctionName] = function (func){
