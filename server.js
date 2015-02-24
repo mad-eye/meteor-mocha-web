@@ -4,6 +4,9 @@
 VelocityMirrors.upsert({name: "fakeMochaPackageMirror"}, {rootUrl: process.env.ROOT_URL})
 TEST_FRAMEWORK_NAME = "mocha";
 
+var describes = [];
+var mochaExports = {};
+
 if (Velocity && Velocity.registerTestingFramework){
   Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
     regex: 'mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$',
@@ -42,9 +45,16 @@ if (Velocity && Velocity.registerTestingFramework){
 
     "clientTestsComplete": function(){
       // console.log("client tests complete, now running server tests");
-       mocha.run(Meteor.bindEnvironment(function(err, result){
-         // console.log("server tests complete", err, result);
-         markTestsComplete()
+      setupMocha();
+      //nested describes should be run immediately
+      global.describe = function(name, func){
+        mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      }
+      describes.forEach(function(obj){
+        mochaExports.describe(obj.name, Meteor.bindEnvironment(obj.func, function(err){throw err; }));
+      });
+      mocha.run(Meteor.bindEnvironment(function(err, result){
+        markTestsComplete()
       }));
     }
   });
@@ -106,13 +116,12 @@ if (Velocity && Velocity.registerTestingFramework){
     };
 
 
-    var mochaExports = {};
     //console.log(mochaExports);
     mocha.suite.emit("pre-require", mochaExports, null, mocha);
 
     //patch up describe function so it plays nice w/ fibers
     global.describe = function (name, func){
-      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      describes.push({name: name, func: func})
     };
     global.describe.skip = mochaExports.describe.skip;
     global.describe.only = mochaExports.describe.only;
@@ -187,14 +196,15 @@ if (Velocity && Velocity.registerTestingFramework){
         mochaExports[testFunctionName](boundWrappedFunction);
       }
     });
+
+    //add Meteor-specfiic describe.client, describe.server etc.
+    describe.client = function(){};
+    it.client = function(){};
+
+    describe.server = describe;
+    describe.it = it;
+
   }
-
-  //add Metoer-specfiic describe.client, describe.server etc.
-  describe.client = function(){};
-  it.client = function(){};
-
-  describe.server = describe;
-  describe.it = it;
 }
 
 var addAggregateMetadata = function(data){
