@@ -1,6 +1,12 @@
 //insert a fake mirror into the db
 //this is necssary for CI to work correctly
 //it will not cause a mirror process to be started
+//currently not possible to export names with debugOnly packages
+Velocity = Package['velocity:core'].Velocity;
+VelocityMirrors = Package['velocity:core'].VelocityMirrors;
+VelocityAggregateReports = Package['velocity:core'].VelocityAggregateReports;
+
+
 VelocityMirrors.upsert({name: "fakeMochaPackageMirror"}, {rootUrl: process.env.ROOT_URL})
 TEST_FRAMEWORK_NAME = "mocha";
 
