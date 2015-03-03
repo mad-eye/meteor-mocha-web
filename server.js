@@ -44,6 +44,25 @@ if (Velocity && Velocity.registerTestingFramework){
     });
   }
 
+  //invoke all of the describes in a properly wrapped fashion
+  function setupSuite(){
+    setupMocha();
+    //nested describes should be run immediately
+    global.describe = function(name, func){
+      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+    }
+    global.describe.skip = mochaExports.describe.skip;
+    global.describe.only = function(name, func){
+      mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+    }
+    describes.forEach(function(obj){
+      describe(obj.name, obj.func);
+    });
+    describeOnlys.forEach(function(obj){
+      describe.only(obj.name, obj.func);
+    });
+  }
+
   Meteor.methods({
     "mirrorInfo": function(){
       return {
@@ -54,19 +73,7 @@ if (Velocity && Velocity.registerTestingFramework){
 
     "clientTestsComplete": function(){
       // console.log("client tests complete, now running server tests");
-      setupMocha();
-      //nested describes should be run immediately
-      global.describe = function(name, func){
-        mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
-      }
-      global.describe.skip = mochaExports.describe.skip;
-      global.describe.only = function(name, func){
-        mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
-      }
-
-      describes.forEach(function(obj){
-        mochaExports.describe(obj.name, Meteor.bindEnvironment(obj.func, function(err){throw err; }));
-      });
+      setupSuite()
       mocha.run(Meteor.bindEnvironment(function(err, result){
         markTestsComplete()
       }));
@@ -133,7 +140,6 @@ if (Velocity && Velocity.registerTestingFramework){
     //console.log(mochaExports);
     mocha.suite.emit("pre-require", mochaExports, null, mocha);
 
-    //patch up describe function so it plays nice w/ fibers
     global.describe = function (name, func){
       describes.push({name: name, func: func})
     };
@@ -232,6 +238,7 @@ var addAggregateMetadata = function(data){
 Meteor.methods({
   'mochaResetAll': function(){
     Meteor.call("velocity/reset", function(err){
+      setupSuite();
       updateCounts();
       if (err){
         console.error("error calling testsComplete function", err);
