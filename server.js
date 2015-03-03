@@ -11,6 +11,9 @@ VelocityMirrors.upsert({name: "fakeMochaPackageMirror"}, {rootUrl: process.env.R
 TEST_FRAMEWORK_NAME = "mocha";
 
 var describes = [];
+var describeSkips = [];
+var describeOnlys = [];
+
 var mochaExports = {};
 
 if (Velocity && Velocity.registerTestingFramework){
@@ -56,6 +59,11 @@ if (Velocity && Velocity.registerTestingFramework){
       global.describe = function(name, func){
         mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
       }
+      global.describe.skip = mochaExports.describe.skip;
+      global.describe.only = function(name, func){
+        mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      }
+
       describes.forEach(function(obj){
         mochaExports.describe(obj.name, Meteor.bindEnvironment(obj.func, function(err){throw err; }));
       });
@@ -129,8 +137,12 @@ if (Velocity && Velocity.registerTestingFramework){
     global.describe = function (name, func){
       describes.push({name: name, func: func})
     };
-    global.describe.skip = mochaExports.describe.skip;
-    global.describe.only = mochaExports.describe.only;
+    global.describe.skip = function(name, func){
+      describeSkips.push({name: name, func: func})
+    }
+    global.describe.only = function(name, func){
+      describeOnlys.push({name: name, func: func})
+    }
 
     //In Meteor, these blocks will all be invoking Meteor code and must
     //run within a fiber. We must therefore wrap each with something like
