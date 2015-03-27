@@ -173,9 +173,18 @@ else {
     mocha.suite.emit("pre-require", mochaExports, undefined, mocha);
     //console.log(mochaExports);
 
-    //patch up describe function so it plays nice w/ fibers
+    // 1. patch up describe function so it plays nice w/ fibers
+    // 2. trick to allow binding the suite instance as `this` value
+    // inside of describe blocks, to allow e.g. to set custom timeouts.
+    function wrapRunnable(func) {
+      return function() {
+        // `this` will be bound to the suite instance, as of Mocha's `describe` implementation
+        Meteor.bindEnvironment(func.bind(this), function(err) { throw err; })();
+      }
+    }
+
     global.describe = function (name, func){
-      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      return mochaExports.describe(name, wrapRunnable(func));
     };
     global.describe.skip = mochaExports.describe.skip;
     global.describe.only = function(name, func) {
