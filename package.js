@@ -18,6 +18,7 @@ Npm.depends({
 
 Package.on_use(function (api, where) {
   api.use(['velocity:core@0.4.5'], "server");
+//   api.use(['respondly:test-reporter'], 'client');
   api.use(['velocity:html-reporter@0.3.2'], "client");
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.1.0'], ["client", "server"]);

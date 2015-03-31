@@ -3,7 +3,7 @@
 ddpParentConnection = null;
 window.mochaWebClientTestsComplete = false;
 
-var testSetupFunctions = []
+var testSetupFunctions = [];
 
 MochaWeb.testOnly = function(callback){
   testSetupFunctions.push(callback);
@@ -31,7 +31,7 @@ Meteor.startup(function(){
             if (err){
               console.error("ERROR INVOKING CLIENT TESTS COMPLETE", err);
             }
-          })
+          });
         });
       }, 0);
     } else {
@@ -45,7 +45,7 @@ Template.mochaweb.helpers({
   mochaWebIFrameURL: function(){
     var mirror = VelocityMirrors.findOne({framework: "mocha", state: "ready"});
     if (mirror && mirror.rootUrl){
-      return mirror.rootUrl + "&lastModified=" + mirror.lastModified;
+      return mirror.rootUrl + mirror.rootUrlPath + "&lastModified=" + mirror.lastModified;
     }
     return null;
   }

@@ -1,6 +1,6 @@
 TEST_FRAMEWORK_NAME = "mocha";
 
-if (!process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV !== "development"){
   console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
 }
 else {
@@ -72,20 +72,20 @@ else {
     }
   });
 
-  function markTestsComplete(){
+  var markTestsComplete = function(){
     ddpParentConnection.call("velocity/reports/completed", {framework: "mocha"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }
     });
-  }
+  };
 
   Meteor.methods({
     "mirrorInfo": function(){
       return {
         isMirror: process.env.IS_MIRROR,
         parentUrl: process.env.PARENT_URL
-      }
+      };
     },
 
     "clientTestsComplete": function(){
@@ -95,7 +95,7 @@ else {
         markTestsComplete();
       }
     }
-  })
+  });
 
   //if not a mirror don't do anything
   MochaWeb.testOnly = function(callback){
