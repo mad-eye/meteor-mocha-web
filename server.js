@@ -1,12 +1,12 @@
 TEST_FRAMEWORK_NAME = "mocha";
 
-if (!process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV !== "development"){
   console.log("process.env.NODE ENV != DEVELOPMENT, TESTS WILL NOT BE RAN");
 }
 else {
   if (Velocity && Velocity.registerTestingFramework){
     Velocity.registerTestingFramework(TEST_FRAMEWORK_NAME, {
-      regex: '^tests/mocha/.+\\.(js|coffee|litcoffee|coffee\\.md)$',
+      regex: '^tests/mocha/.*$',
       sampleTestGenerator: function(){
         return [
           { path: "mocha/client/sampleClientTest.js",
@@ -72,20 +72,20 @@ else {
     }
   });
 
-  function markTestsComplete(){
+  var markTestsComplete = function(){
     ddpParentConnection.call("velocity/reports/completed", {framework: "mocha"}, function(err){
       if (err){
         console.error("error calling testsComplete function", err);
       }
     });
-  }
+  };
 
   Meteor.methods({
     "mirrorInfo": function(){
       return {
         isMirror: process.env.IS_MIRROR,
         parentUrl: process.env.PARENT_URL
-      }
+      };
     },
 
     "clientTestsComplete": function(){
@@ -95,7 +95,7 @@ else {
         markTestsComplete();
       }
     }
-  })
+  });
 
   //if not a mirror don't do anything
   MochaWeb.testOnly = function(callback){
@@ -170,15 +170,26 @@ else {
 
 
     var mochaExports = {};
-    mocha.suite.emit("pre-require", mochaExports);
+    mocha.suite.emit("pre-require", mochaExports, undefined, mocha);
     //console.log(mochaExports);
 
-    //patch up describe function so it plays nice w/ fibers
+    // 1. patch up describe function so it plays nice w/ fibers
+    // 2. trick to allow binding the suite instance as `this` value
+    // inside of describe blocks, to allow e.g. to set custom timeouts.
+    function wrapRunnable(func) {
+      return function() {
+        // `this` will be bound to the suite instance, as of Mocha's `describe` implementation
+        Meteor.bindEnvironment(func.bind(this), function(err) { throw err; })();
+      }
+    }
+
     global.describe = function (name, func){
-      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      return mochaExports.describe(name, wrapRunnable(func));
     };
     global.describe.skip = mochaExports.describe.skip;
-    global.describe.only = mochaExports.describe.only;
+    global.describe.only = function(name, func) {
+      mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){ throw err; }));
+    };
 
     //In Meteor, these blocks will all be invoking Meteor code and must
     //run within a fiber. We must therefore wrap each with something like
@@ -212,7 +223,9 @@ else {
       mochaExports['it'](name, boundWrappedFunction);
     };
     global.it.skip = mochaExports.it.skip;
-    global.it.only = mochaExports.it.only;
+    global.it.only = function(name, func) {
+      mochaExports.it.only(name, Meteor.bindEnvironment(func, function(err){ throw err; }));
+    };
 
     ["before", "beforeEach", "after", "afterEach"].forEach(function(testFunctionName){
       global[testFunctionName] = function (func){
