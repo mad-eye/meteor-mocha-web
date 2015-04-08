@@ -14,7 +14,7 @@ window.MirrorURLs = new Meteor.Collection("mirrorUrls");
 Meteor.startup(function(){
   //TODO this method should probably live in the Velocity namespace velocity/mirrorInfo?
   Meteor.call("mirrorInfo", function(error, mirrorInfo){
-    if (mirrorInfo.isMirror && /mocha=true/.test(document.location.href.split("?")[1])){
+    if (mirrorInfo.isMirror){
       Session.set("mochaWebMirror", true);
       Meteor.setTimeout(function(){
         ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
