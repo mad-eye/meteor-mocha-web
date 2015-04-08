@@ -17,7 +17,7 @@ Npm.depends({
 //Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
-  api.use(['underscore'], ['client', 'server']);
+  api.use(['underscore@1.0.3'], ['client', 'server']);
   api.use(['velocity:core@0.6.0-rc.5'], "server");
   api.use(['velocity:html-reporter@0.5.0'], "client");
   api.use(['templating@1.0.6'], "client");
