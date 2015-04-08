@@ -46,3 +46,8 @@ You're free to write your tests in any Meteor supported extension. The [chai](ht
 2. Create a packages directory in the root of your app if it doesn't already exist `cd YOUR_APP && mkdir packages`
 3. Create a symlink to the repository you cloned `cd YOUR_APP/packages && ln -s /PATH/TO/meteor-mocha-web mike:mocha`
 4. Run your app
+
+## Using `mike:mocha-package`
+See the README for this fork [https://github.com/mad-eye/meteor-mocha-web/tree/packageTest]([https://github.com/mad-eye/meteor-mocha-web/tree/packageTest])
+
+I hope to fold this back into master soon.
