@@ -93,9 +93,11 @@ if (Velocity && Velocity.registerTestingFramework){
   function setupGlobals(){
     //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
     //except the wrapped function has an argument (mocha distinguishes
-    //asynchronous tests from synchronous ones by the "length" of the
-    //function passed into it, before, etc.)
-    var moddedBindEnvironment = function (func, onException, _this) {
+    //asynchronous tests from synchronous ones by the "length" of the function
+    //passed into it, before, etc.).  Furthermore, 'this' received from mocha
+    //is passed to the wrapped func in order to support 'this.timeout()' as
+    //documented in the official mocha doc.
+    var moddedBindEnvironment = function (func, onException) {
       if (!Fiber.current)
         throw new Error(noFiberMessage);
 
@@ -111,8 +113,9 @@ if (Velocity && Velocity.registerTestingFramework){
         };
       }
 
-      //note the callback variable present here
+      //note the callback variable present here and that this is forwarded.
       return function (callback) {
+        var _this = this;
         var args = _.toArray(arguments);
 
         var runWithEnvironment = function () {
@@ -167,11 +170,11 @@ if (Velocity && Velocity.registerTestingFramework){
     global['it'] = function (name, func){
       wrappedFunc = function(callback){
         if (func.length == 0){
-          func();
+          func.call(this);
           callback();
         }
         else {
-          func(callback);
+          func.call(this, callback);
         }
       }
 
@@ -185,11 +188,11 @@ if (Velocity && Velocity.registerTestingFramework){
     global['it'].only = function (name, func){
       wrappedFunc = function(callback){
         if (func.length == 0){
-          func();
+          func.call(this);
           callback();
         }
         else {
-          func(callback);
+          func.call(this, callback);
         }
       }
 
@@ -206,11 +209,11 @@ if (Velocity && Velocity.registerTestingFramework){
       global[testFunctionName] = function (func){
         wrappedFunc = function(callback){
           if (func.length == 0){
-            func();
+            func.call(this);
             callback();
           }
           else {
-            func(callback);
+            func.call(this, callback);
           }
         }
 
