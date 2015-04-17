@@ -156,7 +156,7 @@ if (Velocity && Velocity.registerTestingFramework){
     //run within a fiber. We must therefore wrap each with something like
     //bindEnvironment. The function passed off to mocha must have length
     //greater than zero if we want mocha to run it asynchronously. That's
-    //why it uses the moddedBindEnivronment function described above instead
+    //why it uses the moddedBindEnvironment function described above instead
 
     //We're actually having mocha run all tests asynchronously. This
     //is because mocha cannot tell when a synchronous fiber test has
