@@ -97,11 +97,11 @@ if (Velocity && Velocity.registerTestingFramework){
     setupMocha();
     //nested describes should be run immediately
     global.describe = function(name, func){
-      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      mochaExports.describe(name, moddedBindEnvironment(func, function(err){ throw err; }));
     }
     global.describe.skip = mochaExports.describe.skip;
     global.describe.only = function(name, func){
-      mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      mochaExports.describe.only(name, moddedBindEnvironment(func, function(err){ throw err; }));
     }
     describes.forEach(function(obj){
       describe(obj.name, obj.func);
