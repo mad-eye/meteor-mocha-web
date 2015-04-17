@@ -44,6 +44,54 @@ if (Velocity && Velocity.registerTestingFramework){
     });
   }
 
+  //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
+  //except the wrapped function has an argument (mocha distinguishes
+  //asynchronous tests from synchronous ones by the "length" of the function
+  //passed into it, before, etc.).  Furthermore, 'this' received from mocha
+  //is passed to the wrapped func in order to support 'this.timeout()' as
+  //documented in the official mocha doc.
+  var moddedBindEnvironment = function (func, onException) {
+    if (!Fiber.current)
+      throw new Error(noFiberMessage);
+
+    var boundValues = _.clone(Fiber.current._meteor_dynamics || []);
+
+    if (!onException || typeof(onException) === 'string') {
+      var description = onException || "callback of async function";
+      onException = function (error) {
+        Meteor._debug(
+          "Exception in " + description + ":",
+          error && error.stack || error
+        );
+      };
+    }
+
+    //note the callback variable present here and that this is forwarded.
+    return function (callback) {
+      var _this = this;
+      var args = _.toArray(arguments);
+
+      var runWithEnvironment = function () {
+        var savedValues = Fiber.current._meteor_dynamics;
+        try {
+          // Need to clone boundValues in case two fibers invoke this
+          // function at the same time
+          Fiber.current._meteor_dynamics = _.clone(boundValues);
+          var ret = func.apply(_this, args);
+        } catch (e) {
+          onException(e);
+        } finally {
+          Fiber.current._meteor_dynamics = savedValues;
+        }
+        return ret;
+      };
+
+      if (Fiber.current)
+        return runWithEnvironment();
+      Fiber(runWithEnvironment).run();
+    };
+  };
+
   //invoke all of the describes in a properly wrapped fashion
   function setupSuite(){
     setupMocha();
@@ -91,55 +139,6 @@ if (Velocity && Velocity.registerTestingFramework){
   }
 
   function setupGlobals(){
-    //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
-    //except the wrapped function has an argument (mocha distinguishes
-    //asynchronous tests from synchronous ones by the "length" of the function
-    //passed into it, before, etc.).  Furthermore, 'this' received from mocha
-    //is passed to the wrapped func in order to support 'this.timeout()' as
-    //documented in the official mocha doc.
-    var moddedBindEnvironment = function (func, onException) {
-      if (!Fiber.current)
-        throw new Error(noFiberMessage);
-
-      var boundValues = _.clone(Fiber.current._meteor_dynamics || []);
-
-      if (!onException || typeof(onException) === 'string') {
-        var description = onException || "callback of async function";
-        onException = function (error) {
-          Meteor._debug(
-            "Exception in " + description + ":",
-            error && error.stack || error
-          );
-        };
-      }
-
-      //note the callback variable present here and that this is forwarded.
-      return function (callback) {
-        var _this = this;
-        var args = _.toArray(arguments);
-
-        var runWithEnvironment = function () {
-          var savedValues = Fiber.current._meteor_dynamics;
-          try {
-            // Need to clone boundValues in case two fibers invoke this
-            // function at the same time
-            Fiber.current._meteor_dynamics = _.clone(boundValues);
-            var ret = func.apply(_this, args);
-          } catch (e) {
-            onException(e);
-          } finally {
-            Fiber.current._meteor_dynamics = savedValues;
-          }
-          return ret;
-        };
-
-        if (Fiber.current)
-          return runWithEnvironment();
-        Fiber(runWithEnvironment).run();
-      };
-    };
-
-
     //console.log(mochaExports);
     mocha.suite.emit("pre-require", mochaExports, null, mocha);
 
