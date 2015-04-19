@@ -62,7 +62,8 @@ else {
       Meteor.setTimeout(function(){
         Meteor.call("velocity/mirrors/request", {
           framework: 'mocha',
-          testsPath: "mocha"
+          testsPath: "mocha",
+          rootUrlPath: '/?mocha=true'
         }, function(err, msg){
           if (err){
             console.log("error requesting mirror", err);
