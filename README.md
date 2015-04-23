@@ -47,6 +47,17 @@ You're free to write your tests in any Meteor supported extension. The [chai](ht
 3. Create a symlink to the repository you cloned `cd YOUR_APP/packages && ln -s /PATH/TO/meteor-mocha-web mike:mocha`
 4. Run your app
 
+### Running tests in Continuous Integration
+
+Use the commmand:
+
+```bash
+meteor --test --release velocity:METEOR@1.1.0.2_2
+```
+
+The release `velocity:METEOR@1.1.0.2_2` contains a fix for running
+the client integration tests.
+
 ## Using `mike:mocha-package`
 See the README for this fork [https://github.com/mad-eye/meteor-mocha-web/tree/packageTest]([https://github.com/mad-eye/meteor-mocha-web/tree/packageTest])
 
