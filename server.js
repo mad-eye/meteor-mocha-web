@@ -55,6 +55,9 @@ if (Velocity && Velocity.registerTestingFramework){
     global.describe.only = function(name, func){
       mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
     }
+    //add Meteor-specific describe.client, describe.server etc.
+    global.describe.server = global.describe;
+    global.describe.client = function(){};
     describes.forEach(function(obj){
       describe(obj.name, obj.func);
     });
@@ -221,7 +224,6 @@ if (Velocity && Velocity.registerTestingFramework){
       }
     });
 
-    //add Meteor-specfiic describe.client, describe.server etc.
     describe.client = function(){};
     it.client = function(){};
 
