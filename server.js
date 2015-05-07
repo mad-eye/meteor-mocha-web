@@ -37,7 +37,6 @@ else {
       parentUrl = process.env.PARENT_URL;
       console.log("PARENT URL", process.env.PARENT_URL);
       ddpParentConnection = DDP.connect(parentUrl);
-
       var runServerTests = _.debounce(Meteor.bindEnvironment(function() {
         console.log("Running mocha server tests");
         ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
@@ -59,12 +58,17 @@ else {
 
     } else {
       //HACK need to make sure after the proxy package adds the test files
+      mirrorPort = process.env.MOCHA_MIRROR_PORT;
+      opt = {
+        framework: 'mocha',
+        testsPath: "mocha",
+        rootUrlPath: '/?mocha=true',
+      }
+      if(mirrorPort) {
+        opt['port'] = parseInt(mirrorPort);
+      }
       Meteor.setTimeout(function(){
-        Meteor.call("velocity/mirrors/request", {
-          framework: 'mocha',
-          testsPath: "mocha",
-          rootUrlPath: '/?mocha=true'
-        }, function(err, msg){
+        Meteor.call("velocity/mirrors/request", opt, function(err, msg){
           if (err){
             console.log("error requesting mirror", err);
           }
