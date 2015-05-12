@@ -11,6 +11,9 @@ MochaWeb.testOnly = function(callback){
 
 window.MirrorURLs = new Meteor.Collection("mirrorUrls");
 
+window.chai = Package['practicalmeteor:chai'].chai;
+
+
 Meteor.startup(function(){
   //TODO this method should probably live in the Velocity namespace velocity/mirrorInfo?
   Meteor.call("mirrorInfo", function(error, mirrorInfo){

@@ -8,24 +8,22 @@ Package.describe({
 
 Npm.depends({
   mocha: "1.17.1",
-  chai: "1.9.0",
   mkdirp: "0.5.0"
 });
 
-//TODO break this out into a separate package and depend weakly
-//Require npm assertion library if it doesn't exist..
-//Npm.depends({chai: "1.9.0"});
 
 Package.on_use(function (api, where) {
   api.use(['underscore@1.0.3'], ['client', 'server']);
   api.use(['velocity:core@0.6.0-rc.5'], "server");
   api.use(['velocity:html-reporter@0.5.0'], "client");
+  api.use('practicalmeteor:chai');
+
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.1.0'], ["client", "server"]);
   api.use(['mike:mocha-core@0.1.0'], ["client", "server"]);
 
   api.add_files(["reporter.js", "server.js"], "server");
-  api.add_files(["client.html", "mocha.js", "reporter.js", "client.js", "chai.js"], "client");
+  api.add_files(["client.html", "mocha.js", "reporter.js", "client.js"], "client");
 
   api.add_files(["sample-tests/client.js","sample-tests/server.js"], "server", {isAsset: true});
 

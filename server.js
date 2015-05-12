@@ -1,4 +1,5 @@
-if (Velocity && Velocity.registerTestingFramework){
+//register the testing framework if this is the main app (not a mirror)
+if (!process.env.IS_MIRROR){
   Velocity.registerTestingFramework("mocha", {
     regex: '^tests/mocha/.*$',
     sampleTestGenerator: function(){
@@ -27,12 +28,11 @@ var parentUrl = null;
 
 Meteor.startup(function(){
   if (process.env.IS_MIRROR) {
-    console.log("MOCHA-WEB MIRROR LISTENING AT", process.env.ROOT_URL);
+    console.log("MOCHA MIRROR LISTENING AT", process.env.ROOT_URL);
     parentUrl = process.env.PARENT_URL;
-    console.log("PARENT URL", process.env.PARENT_URL);
     ddpParentConnection = DDP.connect(parentUrl);
 
-    var runServerTests = _.debounce(Meteor.bindEnvironment(function() {
+    var runServerTests = Meteor.bindEnvironment(function() {
       console.log("Running mocha server tests");
       ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
         mocha.run(Meteor.bindEnvironment(function(err){
@@ -42,28 +42,22 @@ Meteor.startup(function(){
           }
         }));
       });
-    }));
-
-    VelocityMirrors = new Meteor.Collection('velocityMirrors', {connection: ddpParentConnection});
-    ddpParentConnection.subscribe('VelocityMirrors');
-    VelocityMirrors.find({framework: "mocha", state: "ready"}).observe({
-      added: runServerTests,
-      changed: runServerTests
     });
 
-  } else {
-    //HACK need to make sure after the proxy package adds the test files
     Meteor.setTimeout(function(){
-      Meteor.call("velocity/mirrors/request", {
-        framework: 'mocha',
-        testsPath: "mocha",
-        rootUrlPath: '/?mocha=true'
-      }, function(err, msg){
-        if (err){
-          console.log("error requesting mirror", err);
-        }
-      });
-    }, 100);
+      runServerTests();
+    })
+
+  } else {
+    Meteor.call("velocity/mirrors/request", {
+      framework: 'mocha',
+      testsPath: "mocha",
+      rootUrlPath: '/?mocha=true'
+    }, function(err, msg){
+      if (err){
+        console.log("error requesting mirror", err);
+      }
+    });
   }
 });
 
@@ -102,16 +96,12 @@ setupMocha();
 function setupMocha(){
   if (! process.env.IS_MIRROR)
     return;
-  // console.log("Enabling MochaWeb.testOnly");
-  //only when mocha has been explicity enabled (in a mirror)
-  //do we run the tests
+
   MochaWeb.testOnly = function(callback){
     callback();
   }
 
-  global.chai = Npm.require("chai");
-  // enable stack trace with line numbers with assertions
-  global.chai.Assertion.includeStack = true;
+  global.chai = Package['practicalmeteor:chai'].chai;
   global.mocha = new Mocha({ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
   console.log("SETUP GLOBALS");
   setupGlobals();
