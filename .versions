@@ -18,7 +18,8 @@ json@1.0.3
 less@1.0.14
 logging@1.0.7
 meteor@1.1.6
-mike:mocha@0.5.3
+mike:mocha@0.6.0-rc-1
+mike:mocha-core@0.1.0
 minifiers@1.1.5
 minimongo@1.0.8
 mongo@1.1.0

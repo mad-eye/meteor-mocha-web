@@ -16,7 +16,7 @@ Package.on_use(function (api, where) {
   api.use(['underscore@1.0.3'], ['client', 'server']);
   api.use(['velocity:core@0.6.0-rc.5'], "server");
   api.use(['velocity:html-reporter@0.5.0'], "client");
-  api.use('practicalmeteor:chai');
+  api.use('practicalmeteor:chai@2.1.0_1');
 
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.1.0'], ["client", "server"]);
