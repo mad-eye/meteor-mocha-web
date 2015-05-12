@@ -26,7 +26,5 @@ Package.on_use(function (api, where) {
   api.add_files(["client.html", "mocha.js", "reporter.js", "client.js"], "client");
 
   api.add_files(["sample-tests/client.js","sample-tests/server.js"], "server", {isAsset: true});
-
   api.export("MochaWeb", ["client", "server"]);
-  api.export("MeteorCollectionTestReporter", ["client", "server"]);
 });

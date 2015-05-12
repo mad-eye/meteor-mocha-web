@@ -31,25 +31,15 @@ Meteor.startup(function(){
     parentUrl = process.env.PARENT_URL;
     ddpParentConnection = DDP.connect(parentUrl);
 
-    var runServerTests = Meteor.bindEnvironment(function() {
+    runServerTests = Meteor.bindEnvironment(function() {
       console.log("Running mocha server tests");
-      ddpParentConnection.call("velocity/reports/reset", {framework: 'mocha'}, function(err, result){
-        mocha.run(Meteor.bindEnvironment(function(err){
-          if (err){
-            console.log("Error running server tests", err);
-          }
-          serverTestsComplete = true;
-          if (clientTestsComplete){
-            markTestsComplete();
-          }
-        }));
-      });
+      mocha.run(Meteor.bindEnvironment(function(err){
+        if (err){
+          console.log("Error running server tests", err);
+        }
+        markTestsComplete();
+      }));
     });
-
-    Meteor.setTimeout(function(){
-      runServerTests();
-    })
-
   } else {
     Meteor.call("velocity/mirrors/request", {
       framework: 'mocha',
@@ -78,13 +68,8 @@ Meteor.methods({
       parentUrl: process.env.PARENT_URL
     };
   },
-
   "clientTestsComplete": function(){
-    // console.log("CLIENT TESTS COMPLETE");
-    clientTestsComplete = true;
-    if (serverTestsComplete){
-      markTestsComplete();
-    }
+    runServerTests();
   }
 });
 
@@ -106,6 +91,3 @@ function setupMocha(){
   Package['mike:mocha-core'].setupGlobals(mocha);
 }
 setupMocha();
-
-
-
