@@ -44,16 +44,64 @@ if (Velocity && Velocity.registerTestingFramework){
     });
   }
 
+  //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
+  //except the wrapped function has an argument (mocha distinguishes
+  //asynchronous tests from synchronous ones by the "length" of the function
+  //passed into it, before, etc.).  Furthermore, 'this' received from mocha
+  //is passed to the wrapped func in order to support 'this.timeout()' as
+  //documented in the official mocha doc.
+  var moddedBindEnvironment = function (func, onException) {
+    if (!Fiber.current)
+      throw new Error(noFiberMessage);
+
+    var boundValues = _.clone(Fiber.current._meteor_dynamics || []);
+
+    if (!onException || typeof(onException) === 'string') {
+      var description = onException || "callback of async function";
+      onException = function (error) {
+        Meteor._debug(
+          "Exception in " + description + ":",
+          error && error.stack || error
+        );
+      };
+    }
+
+    //note the callback variable present here and that this is forwarded.
+    return function (callback) {
+      var _this = this;
+      var args = _.toArray(arguments);
+
+      var runWithEnvironment = function () {
+        var savedValues = Fiber.current._meteor_dynamics;
+        try {
+          // Need to clone boundValues in case two fibers invoke this
+          // function at the same time
+          Fiber.current._meteor_dynamics = _.clone(boundValues);
+          var ret = func.apply(_this, args);
+        } catch (e) {
+          onException(e);
+        } finally {
+          Fiber.current._meteor_dynamics = savedValues;
+        }
+        return ret;
+      };
+
+      if (Fiber.current)
+        return runWithEnvironment();
+      Fiber(runWithEnvironment).run();
+    };
+  };
+
   //invoke all of the describes in a properly wrapped fashion
   function setupSuite(){
     setupMocha();
     //nested describes should be run immediately
     global.describe = function(name, func){
-      mochaExports.describe(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      mochaExports.describe(name, moddedBindEnvironment(func, function(err){ throw err; }));
     }
     global.describe.skip = mochaExports.describe.skip;
     global.describe.only = function(name, func){
-      mochaExports.describe.only(name, Meteor.bindEnvironment(func, function(err){throw err; }));
+      mochaExports.describe.only(name, moddedBindEnvironment(func, function(err){ throw err; }));
     }
     //add Meteor-specific describe.client, describe.server etc.
     global.describe.server = global.describe;
@@ -94,52 +142,6 @@ if (Velocity && Velocity.registerTestingFramework){
   }
 
   function setupGlobals(){
-    //basically a direct copy from meteor/packages/meteor/dynamics_nodejs.js
-    //except the wrapped function has an argument (mocha distinguishes
-    //asynchronous tests from synchronous ones by the "length" of the
-    //function passed into it, before, etc.)
-    var moddedBindEnvironment = function (func, onException, _this) {
-      if (!Fiber.current)
-        throw new Error(noFiberMessage);
-
-      var boundValues = _.clone(Fiber.current._meteor_dynamics || []);
-
-      if (!onException || typeof(onException) === 'string') {
-        var description = onException || "callback of async function";
-        onException = function (error) {
-          Meteor._debug(
-            "Exception in " + description + ":",
-            error && error.stack || error
-          );
-        };
-      }
-
-      //note the callback variable present here
-      return function (callback) {
-        var args = _.toArray(arguments);
-
-        var runWithEnvironment = function () {
-          var savedValues = Fiber.current._meteor_dynamics;
-          try {
-            // Need to clone boundValues in case two fibers invoke this
-            // function at the same time
-            Fiber.current._meteor_dynamics = _.clone(boundValues);
-            var ret = func.apply(_this, args);
-          } catch (e) {
-            onException(e);
-          } finally {
-            Fiber.current._meteor_dynamics = savedValues;
-          }
-          return ret;
-        };
-
-        if (Fiber.current)
-          return runWithEnvironment();
-        Fiber(runWithEnvironment).run();
-      };
-    };
-
-
     //console.log(mochaExports);
     mocha.suite.emit("pre-require", mochaExports, null, mocha);
 
@@ -157,7 +159,7 @@ if (Velocity && Velocity.registerTestingFramework){
     //run within a fiber. We must therefore wrap each with something like
     //bindEnvironment. The function passed off to mocha must have length
     //greater than zero if we want mocha to run it asynchronously. That's
-    //why it uses the moddedBindEnivronment function described above instead
+    //why it uses the moddedBindEnvironment function described above instead
 
     //We're actually having mocha run all tests asynchronously. This
     //is because mocha cannot tell when a synchronous fiber test has
@@ -170,11 +172,11 @@ if (Velocity && Velocity.registerTestingFramework){
     global['it'] = function (name, func){
       wrappedFunc = function(callback){
         if (func.length == 0){
-          func();
+          func.call(this);
           callback();
         }
         else {
-          func(callback);
+          func.call(this, callback);
         }
       }
 
@@ -188,11 +190,11 @@ if (Velocity && Velocity.registerTestingFramework){
     global['it'].only = function (name, func){
       wrappedFunc = function(callback){
         if (func.length == 0){
-          func();
+          func.call(this);
           callback();
         }
         else {
-          func(callback);
+          func.call(this, callback);
         }
       }
 
@@ -209,11 +211,11 @@ if (Velocity && Velocity.registerTestingFramework){
       global[testFunctionName] = function (func){
         wrappedFunc = function(callback){
           if (func.length == 0){
-            func();
+            func.call(this);
             callback();
           }
           else {
-            func(callback);
+            func.call(this, callback);
           }
         }
 
