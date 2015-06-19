@@ -32,7 +32,6 @@ reactive-var@1.0.5
 retry@1.0.3
 sanjo:long-running-child-process@1.0.3
 spacebars-compiler@1.0.6
-spacejamio:chai@1.9.2_3
 templating@1.1.1
 tracker@1.0.7
 underscore@1.0.3
