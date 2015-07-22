@@ -18,7 +18,7 @@ MochaWeb?.testOnly ->
         setTimeout (->
           $('button.inc').click()
           player = Players.findOne(playerId)
-          chai.assert.equal 10, player.score
+          chai.assert.equal player.score, 10
           Players.remove playerId
           done()
         ), 100
