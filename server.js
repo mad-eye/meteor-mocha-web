@@ -137,7 +137,12 @@ if (Velocity && Velocity.registerTestingFramework){
     global.chai = Npm.require("chai");
     // enable stack trace with line numbers with assertions
     global.chai.Assertion.includeStack = true;
-    global.mocha = new Mocha({ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
+    opts = {};
+    if (typeof global.mocha !== 'undefined') {
+      opts = _.extend(opts, global.mocha.options);
+    }
+    opts = _.extend(opts, {ui: "bdd", reporter: MochaWeb.MeteorCollectionTestReporter});
+    global.mocha = new Mocha(opts);
     setupGlobals();
   }
 
