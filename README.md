@@ -63,6 +63,3 @@ See the README for this fork [https://github.com/mad-eye/meteor-mocha-web/tree/p
 
 ## Deubgging serverside tests
 `VELOCITY_DEBUG_MIRROR=mocha meteor`
-
-
-I hope to fold this back into master soon.
