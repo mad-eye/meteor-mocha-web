@@ -41,11 +41,17 @@ Meteor.startup(function(){
       }));
     });
   } else {
-    Meteor.call("velocity/mirrors/request", {
+    mirrorPort = process.env.MOCHA_MIRROR_PORT;
+    opt = {
       framework: 'mocha',
       testsPath: "mocha",
-      rootUrlPath: '/?mocha=true'
-    }, function(err, msg){
+      rootUrlPath: '/?mocha=true',
+    }
+    if(mirrorPort) {
+      opt['port'] = parseInt(mirrorPort);
+    }
+
+    Meteor.call("velocity/mirrors/request", opt, function(err, msg){
       if (err){
         console.log("error requesting mirror", err);
       }
