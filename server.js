@@ -1,3 +1,8 @@
+// Do not run tests if Velocity is not enabled
+if (process.env.VELOCITY === "0") {
+  return;
+}
+
 //register the testing framework if this is the main app (not a mirror)
 if (!process.env.IS_MIRROR){
   Velocity.registerTestingFramework("mocha", {

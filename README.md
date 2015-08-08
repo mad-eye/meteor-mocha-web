@@ -45,7 +45,8 @@ You're free to write your tests in any Meteor supported extension. The [chai](ht
 1. Clone this repository somewhere `git clone https://github.com/mad-eye/meteor-mocha-web`
 2. Create a packages directory in the root of your app if it doesn't already exist `cd YOUR_APP && mkdir packages`
 3. Create a symlink to the repository you cloned `cd YOUR_APP/packages && ln -s /PATH/TO/meteor-mocha-web mike:mocha`
-4. Run your app
+4. Add the package to the application : meteor add mike:mocha
+5. Run your app
 
 ### Running tests in Continuous Integration
 
