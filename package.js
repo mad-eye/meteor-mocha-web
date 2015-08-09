@@ -1,7 +1,7 @@
 Package.describe({
   name: 'mike:mocha',
   summary: "Run mocha tests in the browser",
-  version: "0.6.2",
+  version: "0.6.3",
   debugOnly: true,
   git: "https://github.com/mad-eye/meteor-mocha-web"
 });
@@ -17,6 +17,8 @@ Package.on_use(function (api, where) {
   api.use(['velocity:core@0.6.0-rc.5'], "server");
   api.use(['velocity:html-reporter@0.5.0'], "client");
   api.use('practicalmeteor:chai@2.1.0_1');
+  //no actual dependency, hacky fix for https://github.com/mad-eye/meteor-mocha-web/issues/174
+  api.use('practicalmeteor:loglevel@1.2.0_2');
 
   api.use(['templating@1.0.6'], "client");
   api.use(['velocity:shim@0.1.0'], ["client", "server"]);
