@@ -50,7 +50,7 @@ Meteor.startup(function(){
     opt = {
       framework: 'mocha',
       testsPath: "mocha",
-      rootUrlPath: '/?mocha=true',
+      rootUrlPath: '?mocha=true',
     }
     if(mirrorPort) {
       opt['port'] = parseInt(mirrorPort);
