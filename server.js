@@ -246,11 +246,11 @@ var addAggregateMetadata = function(data){
 
 Meteor.methods({
   'mochaResetAll': function(){
-    Meteor.call("velocity/reset", function(err){
+    Meteor.call("velocity/reset", "mocha", function(err){
       setupSuite();
       updateCounts();
       if (err){
-        console.error("error calling testsComplete function", err);
+        console.error("error calling reset function", err);
       }
     });
   },
