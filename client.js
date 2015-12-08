@@ -15,7 +15,7 @@ window.chai = Package['practicalmeteor:chai'].chai;
 Meteor.startup(function(){
   //TODO this method should probably live in the Velocity namespace velocity/mirrorInfo?
   Meteor.call("mirrorInfo", function(error, mirrorInfo){
-    if (mirrorInfo.isMirror){
+    if (mirrorInfo && mirrorInfo.isMirror){
       Session.set("mochaWebMirror", true);
       Meteor.setTimeout(function(){
         ddpParentConnection = DDP.connect(mirrorInfo.parentUrl);
