@@ -28,7 +28,7 @@ jquery@1.11.4
 less@2.5.1
 logging@1.0.8
 meteor@1.1.10
-mike:mocha@0.6.5
+mike:mocha@0.6.6
 mike:mocha-core@0.1.0
 minifiers@1.1.7
 minimongo@1.0.10
